@@ -14,7 +14,18 @@ export const countries = [
   { name: "Benin", rotationX: 0.1624500108, rotationY: 0.7295816652, zoom: 0.9, completed: false },
   { name: "Bhutan", rotationX: 0.4802133811, rotationY: -0.8083640744, zoom: 0.9, completed: false },
   { name: "Bolivia", rotationX: -0.2843176258, rotationY: 1.879832182, zoom: 1, completed: false },
+  { name: "Botswana", rotationX: -0.389705842, rotationY: 0.3391672195, zoom: 1, completed: false },
+  { name: "Brazil", rotationX: -0.248447619, rotationY: 1.67626745, zoom: 1.5, completed: false },
+  { name: "Brunei", rotationX: 0.07915591757, rotationY: -1.232376108, zoom: 0.9, completed: false },
+  { name: "Bulgaria", rotationX: 0.7458472572, rotationY: 0.3251888775, zoom: 0.95, completed: false },
+  { name: "Burundi", rotationX: -0.058871701, rotationY: 0.2478166864, zoom: 0.9, completed: false },
+  { name: "Cambodia", rotationX: 0.2193128378, rotationY: -1.062438635, zoom: 1.0, completed: false },
+  { name: "Cameroon", rotationX: 0.1286255299, rotationY: 0.5543698069, zoom: 1.1, completed: false },
   { name: "Canada", rotationX: 0.9796602905, rotationY: 2.626101809, zoom: 1.5, completed: true },
+  { name: "Chad", rotationX: 0.2697266733, rotationY: 0.4430614339, zoom: 1.3, completed: false },
+  { name: "Chile", rotationX: -0.622647956, rotationY: 2.018660907, zoom: 1.2, completed: false },
+  { name: "China", rotationX: 0.6259047404, rotationY: -1.048552795, zoom: 1.5, completed: false },
+  { name: "Colombia", rotationX: 0.07977725478, rotationY: 2.06673251, zoom: 1.2, completed: false },
   { name: "Spain", rotationX: 0.7062247925, rotationY: 0.8354358843, zoom: 1, completed: false },
   { name: "Philippines", rotationX: 0.2247931717, rotationY: -1.355357243, zoom: 1.1, completed: false }
 ];
