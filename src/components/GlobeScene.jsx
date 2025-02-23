@@ -1,0 +1,123 @@
+import { useRef, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
+import { countries } from "../data/countries";
+
+/**
+ * Globe component that renders a 3D model and highlights the selected country with a pulsing glow.
+ */
+function Globe({ selectedCountry }) {
+  const { scene, nodes } = useGLTF("/globe.glb");
+  const pulseRef = useRef(0);
+  const originalMaterials = useRef({});
+  const globeRef = useRef();
+  const targetRotation = useRef({ x: 0, y: 0 });
+  const targetZoom = useRef(1.5);
+  const { camera } = useThree();
+  const customAxis = new THREE.Vector3(1, 0, -0.8).normalize();
+  const targetQuaternion = useRef(new THREE.Quaternion());
+  const defaultCameraDistance = 270;
+
+  // Store original materials on first render
+  useEffect(() => {
+    Object.values(nodes).forEach((mesh) => {
+      if (mesh.isMesh) {
+        originalMaterials.current[mesh.name] = mesh.material.clone();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const country = countries.find(c => c.name === selectedCountry);
+      if (country) {
+        targetRotation.current = {
+          x: country.rotationX,
+          y: country.rotationY
+        };
+        targetZoom.current = country.zoom;
+      }
+    } else {
+      targetZoom.current = 1.5;
+    }
+  }, [selectedCountry]);
+
+  // Create a glowing material for highlighting the selected country
+  const glowMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(0x007700),
+    emissive: new THREE.Color(0x007700),
+  });
+
+  useFrame((_, delta) => {
+    if (globeRef.current) {
+      if (!selectedCountry) {
+        // Only auto-rotate when no country is selected
+        globeRef.current.rotation.y += (Math.PI * 2 * delta) / (60 * 3);
+      } else {
+        // Create quaternion for custom axis rotation
+        const targetQuat = new THREE.Quaternion();
+        targetQuat.setFromAxisAngle(customAxis, targetRotation.current.x);
+        
+        // Create quaternion for y-rotation
+        const yQuat = new THREE.Quaternion();
+        yQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetRotation.current.y);
+        
+        // Combine the rotations
+        targetQuat.multiply(yQuat);
+        
+        // Smoothly interpolate to target quaternion
+        globeRef.current.quaternion.slerp(targetQuat, 0.1);
+      }
+
+      // Smoothly animate camera position based on zoom
+      const currentDistance = camera.position.length();
+      const targetDistance = defaultCameraDistance * targetZoom.current;
+      const newDistance = THREE.MathUtils.lerp(currentDistance, targetDistance, 0.1);
+      camera.position.normalize().multiplyScalar(newDistance);
+    }
+
+    // Update pulse animation for country highlight
+    pulseRef.current += delta * 3;
+    const pulseValue = Math.sin(pulseRef.current) * 0.5 + 0.5;
+
+    Object.values(nodes).forEach((mesh) => {
+      if (mesh.isMesh) {
+        if (mesh.name === selectedCountry) {
+          // Apply glowing effect to selected country
+          mesh.material = glowMaterial;
+          mesh.material.emissiveIntensity = 1 + pulseValue * 2;
+          mesh.material.color.set(new THREE.Color(0x007700).lerp(new THREE.Color(0x005500), pulseValue));
+        } else {
+          // Restore original material if previously modified
+          if (originalMaterials.current[mesh.name]) {
+            mesh.material = originalMaterials.current[mesh.name].clone();
+          }
+          // Apply default colors for ocean and land
+          mesh.material.color.set(mesh.name === "Ocean" ? "white" : "#111111");
+        }
+      }
+    });
+  });
+
+  return <primitive ref={globeRef} object={scene} scale={1.5} />;
+}
+
+/**
+ * GlobeScene component that renders the 3D globe within a Canvas.
+ */
+export default function GlobeScene({ selectedCountry }) {
+  return (
+    <div className="relative w-full h-full">
+      <Canvas camera={{ position: [250, 0, 270], fov: 50 }} className="w-full h-full">
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[50, 5, 5]} intensity={3.5} />
+        <Globe selectedCountry={selectedCountry} />
+      </Canvas>
+      {/* Top fade overlay */}
+      <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-black to-transparent pointer-events-none"></div>
+      {/* Bottom fade overlay */}
+      <div className="absolute bottom-0 left-0 w-full h-[300px] bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
+    </div>
+  );
+}
