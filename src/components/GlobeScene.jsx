@@ -3,13 +3,13 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { countries } from "../data/countries";
+import { MATRIX_COLORS } from "../constants/colors";
 
 /**
- * Globe component that renders a 3D model and highlights the selected country with a pulsing glow.
+ * Globe component that renders a 3D model and highlights the selected country in green.
  */
 function Globe({ selectedCountry }) {
   const { scene, nodes } = useGLTF("/globe.glb");
-  const pulseRef = useRef(0);
   const originalMaterials = useRef({});
   const globeRef = useRef();
   const targetRotation = useRef({ x: 0, y: 0 });
@@ -43,10 +43,11 @@ function Globe({ selectedCountry }) {
     }
   }, [selectedCountry]);
 
-  // Create a glowing material for highlighting the selected country
-  const glowMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(0x007700),
-    emissive: new THREE.Color(0x007700),
+  // Create a static green material for highlighting the selected country
+  const highlightMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(MATRIX_COLORS.LIGHT_GREEN),
+    emissive: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
+    emissiveIntensity: 1
   });
 
   useFrame((_, delta) => {
@@ -77,24 +78,18 @@ function Globe({ selectedCountry }) {
       camera.position.normalize().multiplyScalar(newDistance);
     }
 
-    // Update pulse animation for country highlight
-    pulseRef.current += delta * 3;
-    const pulseValue = Math.sin(pulseRef.current) * 0.5 + 0.5;
-
     Object.values(nodes).forEach((mesh) => {
       if (mesh.isMesh) {
         if (mesh.name === selectedCountry) {
-          // Apply glowing effect to selected country
-          mesh.material = glowMaterial;
-          mesh.material.emissiveIntensity = 1 + pulseValue * 2;
-          mesh.material.color.set(new THREE.Color(0x007700).lerp(new THREE.Color(0x005500), pulseValue));
+          // Apply static green highlight to selected country
+          mesh.material = highlightMaterial;
         } else {
           // Restore original material if previously modified
           if (originalMaterials.current[mesh.name]) {
             mesh.material = originalMaterials.current[mesh.name].clone();
           }
           // Apply default colors for ocean and land
-          mesh.material.color.set(mesh.name === "Ocean" ? "white" : "#111111");
+          mesh.material.color.set(mesh.name === "Ocean" ? MATRIX_COLORS.MATRIX_WHITE : MATRIX_COLORS.MATRIX_BLACK);
         }
       }
     });
