@@ -1,4 +1,5 @@
 import { countries } from "../data/countries";
+import { MATRIX_COLORS } from "../constants/colors";
 
 /**
  * Component for rendering country selection buttons
@@ -9,6 +10,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       {countries.map((country) => (
         <button
           key={country.name}
+          style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
           className={`text-left text-lg transition-colors cursor-pointer
             ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
           onClick={() => onCountrySelect(country.name)}
