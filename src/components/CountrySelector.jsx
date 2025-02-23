@@ -116,7 +116,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
         className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-2'}`}
       >
         <div className="min-h-full flex items-center">
-          <div className={`w-full ${showLetterMenu ? 'pl-3' : 'pl-1'} py-8`}>
+          <div className={`w-full ${showLetterMenu ? 'pl-3 py-8' : 'pl-1 py-4'}`}>
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
               <div key={letter} ref={el => letterRefs.current[letter] = el}>
                 {/* Add divider if not the first group */}
@@ -130,13 +130,13 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                   <div key={country.name} className="flex items-center mb-1">
                     <span 
                       style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : { opacity: 0 }}
-                      className="text-sm w-4 mr-px"
+                      className={`${showLetterMenu ? 'text-sm' : 'text-xs'} w-4 mr-px`}
                     >
                       ▶
                     </span>
                     <button
                       style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
-                      className={`text-left text-lg transition-colors cursor-pointer
+                      className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-base'}
                         ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
