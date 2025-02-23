@@ -116,27 +116,27 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
         className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-2'}`}
       >
         <div className="min-h-full flex items-center">
-          <div className={`w-full ${showLetterMenu ? 'pl-3 py-8' : 'pl-1 py-4'}`}>
+          <div className={`w-full ${showLetterMenu ? 'pl-3 py-8' : 'pl-1 py-3'}`}>
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
               <div key={letter} ref={el => letterRefs.current[letter] = el}>
                 {/* Add divider if not the first group */}
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className="h-px w-32 bg-white mt-[3px] mb-2" />
+                    <div className={`h-px w-32 bg-white ${showLetterMenu ? 'mt-[3px] mb-2' : 'mt-[2px] mb-1'}`} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
-                  <div key={country.name} className="flex items-center mb-1">
+                  <div key={country.name} className={`flex items-center ${showLetterMenu ? 'mb-1' : 'mb-0.5'}`}>
                     <span 
                       style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : { opacity: 0 }}
-                      className={`${showLetterMenu ? 'text-sm' : 'text-xs'} w-4 mr-px`}
+                      className={`${showLetterMenu ? 'text-sm' : 'text-[10px]'} w-4 mr-px`}
                     >
                       ▶
                     </span>
                     <button
                       style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
-                      className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-base'}
+                      className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-sm'}
                         ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
