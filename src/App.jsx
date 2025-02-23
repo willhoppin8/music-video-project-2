@@ -9,11 +9,11 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center">
-      <CountrySelector onCountrySelect={setSelectedCountry} />
+    <div className="w-screen h-screen relative">
       <div className="w-full h-full">
         <GlobeScene selectedCountry={selectedCountry} />
       </div>
+      <CountrySelector onCountrySelect={setSelectedCountry} selectedCountry={selectedCountry} />
     </div>
   );
 }

@@ -3,13 +3,14 @@ import { countries } from "../data/countries";
 /**
  * Component for rendering country selection buttons
  */
-export default function CountrySelector({ onCountrySelect }) {
+export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   return (
-    <div className="flex gap-4 my-6">
+    <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
       {countries.map((country) => (
         <button
           key={country.name}
-          className="px-4 py-2 bg-blue-500 text-white cursor-pointer rounded-lg hover:bg-blue-600 transition-colors"
+          className={`text-left text-lg transition-colors cursor-pointer
+            ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
           onClick={() => onCountrySelect(country.name)}
         >
           {country.name}
