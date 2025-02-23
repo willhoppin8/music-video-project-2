@@ -36,7 +36,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   return (
     <div className="fixed inset-0 z-10 overflow-hidden">
       {/* Alphabet Navigation */}
-      <div className="absolute left-0 top-0 bottom-0 w-6 flex items-center">
+      <div className="absolute left-6 top-0 bottom-0 w-6 flex items-center">
         <div className="w-full py-8 flex flex-col items-center">
           {Object.keys(groupedCountries).map((letter) => (
             <button
@@ -51,23 +51,23 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       </div>
 
       {/* Country List */}
-      <div ref={containerRef} className="absolute inset-0 overflow-y-auto scrollbar-hide ml-6">
+      <div ref={containerRef} className="absolute inset-0 overflow-y-auto scrollbar-hide ml-9">
         <div className="min-h-full flex items-center">
-          <div className="w-full pl-8 py-8">
+          <div className="w-full pl-6 py-8">
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
               <div key={letter} ref={el => letterRefs.current[letter] = el}>
                 {/* Add divider if not the first group */}
                 {index > 0 && (
-                  <div className="flex items-center gap-2">
-                    <span className="w-4 opacity-0">▶</span>
+                  <div className="flex items-center">
+                    <span className="w-4 opacity-0 mr-px">▶</span>
                     <div className="h-px w-32 bg-white mt-[3px] mb-2" />
                   </div>
                 )}
                 {letterCountries.map((country) => (
-                  <div key={country.name} className="flex items-center gap-2 mb-1">
+                  <div key={country.name} className="flex items-center mb-1">
                     <span 
                       style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : { opacity: 0 }}
-                      className="text-sm w-4"
+                      className="text-sm w-4 mr-px"
                     >
                       ▶
                     </span>
