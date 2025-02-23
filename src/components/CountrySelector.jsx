@@ -123,7 +123,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className={`h-px w-32 bg-white ${showLetterMenu ? 'mt-[3px] mb-2' : 'mt-[2px] mb-1'}`} />
+                    <div className={`h-px bg-white ${showLetterMenu ? 'w-32 mt-[3px] mb-2' : 'w-20 mt-[2px] mb-1'}`} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
