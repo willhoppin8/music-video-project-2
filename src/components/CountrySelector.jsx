@@ -30,6 +30,12 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
         top: elementPosition - 75,
         behavior: 'smooth'
       });
+      
+      // Auto-select the first country in this letter group
+      const firstCountryInGroup = groupedCountries[letter][0];
+      if (firstCountryInGroup) {
+        onCountrySelect(firstCountryInGroup.name);
+      }
     }
   };
 
