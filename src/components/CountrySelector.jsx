@@ -27,7 +27,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   useEffect(() => {
     const updateLetterMenu = () => {
       const screenHeight = window.innerHeight;
-      setShowLetterMenu(screenHeight >= 350);
+      setShowLetterMenu(screenHeight >= 520);
 
       // Calculate letter size based on available height
       // Maximum height is what it currently is (24px for text-2xl)
