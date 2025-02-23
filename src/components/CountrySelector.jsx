@@ -42,6 +42,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
             <button
               key={letter}
               onClick={() => scrollToLetter(letter)}
+              style={selectedCountry?.startsWith(letter) ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
               className="text-2xl text-white/70 hover:text-white mb-2 cursor-pointer"
             >
               {letter}
