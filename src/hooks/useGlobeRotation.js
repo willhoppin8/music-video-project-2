@@ -2,115 +2,135 @@ import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { countries } from "../data/countries";
 
-const ROTATION_CONSTANTS = {
-  DEFAULT_ZOOM: 1.5,
-  DEFAULT_CAMERA_DISTANCE: 270,
-  MIN_TRANSITION_SPEED: 0.03,
-  MAX_TRANSITION_SPEED: 0.09,
-  AUTO_ROTATE_DURATION: 180, // 3 seconds (60 * 3)
-  MAX_ZOOM_OUT_MULTIPLIER: 1.0,
-};
+const DEFAULT_ZOOM = 1.5;
+const DEFAULT_CAMERA_DISTANCE = 270;
+const MIN_TRANSITION_SPEED = 0.03; // Double current speed (was 0.02)
+const MAX_TRANSITION_SPEED = 0.09; // Double current speed (was 0.06)
 
 /**
- * Calculates the great-circle distance between two points on a sphere.
- * @param {Object} rot1 - First rotation point {x: latitude1, y: longitude1}
- * @param {Object} rot2 - Second rotation point {x: latitude2, y: longitude2}
- * @return {number} Angular distance between points
- */
-const calculateGreatCircleDistance = (rot1, rot2) => {
-  const dLon = rot2.y - rot1.y;
-  const dLat = rot2.x - rot1.x;
-  const a = Math.sin(dLat/2) ** 2 + 
-            Math.cos(rot1.x) * Math.cos(rot2.x) * Math.sin(dLon/2) ** 2;
-  return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-};
-
-/**
- * Custom hook to handle globe rotation and zoom transitions
+ * Custom hook to handle globe rotation and zoom logic
  */
 export default function useGlobeRotation(selectedCountry, camera) {
-  const state = useRef({
-    targetRotation: { x: 0, y: 0 },
-    targetZoom: ROTATION_CONSTANTS.DEFAULT_ZOOM,
-    previousCountry: null,
-    transitionSpeed: ROTATION_CONSTANTS.MIN_TRANSITION_SPEED,
-    transitionProgress: 0,
-    maxZoomOutFactor: 1,
-    startZoom: ROTATION_CONSTANTS.DEFAULT_ZOOM,
-  });
-
+  const targetRotation = useRef({ x: 0, y: 0 });
+  const targetZoom = useRef(DEFAULT_ZOOM);
   const customAxis = new THREE.Vector3(1, 0, -0.8).normalize();
+  const previousCountry = useRef(null);
+  const transitionSpeed = useRef(MIN_TRANSITION_SPEED);
+
+  // Calculate angular distance between two sets of rotations
+  const calculateDistance = (rot1, rot2) => {
+    // Convert to spherical coordinates (assuming rotationY is longitude and rotationX is latitude)
+    const lon1 = rot1.y;
+    const lat1 = rot1.x;
+    const lon2 = rot2.y;
+    const lat2 = rot2.x;
+
+    // Haversine formula for great-circle distance
+    const dLon = lon2 - lon1;
+    const dLat = lat2 - lat1;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1) * Math.cos(lat2) * 
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return c;
+  };
+
+  // Add transition progress tracking
+  const transitionProgress = useRef(0);
+  const maxZoomOutFactor = useRef(1);
+  const startZoom = useRef(DEFAULT_ZOOM);
 
   useEffect(() => {
-    const s = state.current;
-    
-    if (!selectedCountry) {
-      s.startZoom = camera.position.length() / ROTATION_CONSTANTS.DEFAULT_CAMERA_DISTANCE;
-      s.targetZoom = ROTATION_CONSTANTS.DEFAULT_ZOOM;
-      s.previousCountry = null;
-      s.transitionSpeed = ROTATION_CONSTANTS.MIN_TRANSITION_SPEED;
-      s.maxZoomOutFactor = 1;
-      s.transitionProgress = 0;
-      return;
-    }
-
-    const country = countries.find(c => c.name === selectedCountry);
-    if (!country) return;
-
-    s.startZoom = camera.position.length() / ROTATION_CONSTANTS.DEFAULT_CAMERA_DISTANCE;
-    s.transitionProgress = 0;
-    
-    const newRotation = { x: country.rotationX, y: country.rotationY };
-
-    if (s.previousCountry) {
-      const prevCountry = countries.find(c => c.name === s.previousCountry);
-      if (prevCountry) {
-        const prevRotation = { x: prevCountry.rotationX, y: prevCountry.rotationY };
-        const distance = calculateGreatCircleDistance(newRotation, prevRotation);
+    if (selectedCountry) {
+      const country = countries.find(c => c.name === selectedCountry);
+      if (country) {
+        // Store the starting zoom level for smooth transitions
+        startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
         
-        s.transitionSpeed = Math.max(
-          ROTATION_CONSTANTS.MIN_TRANSITION_SPEED,
-          ROTATION_CONSTANTS.MAX_TRANSITION_SPEED / (1 + distance)
-        );
-        s.maxZoomOutFactor = 1 + Math.min(distance, Math.PI) / Math.PI * ROTATION_CONSTANTS.MAX_ZOOM_OUT_MULTIPLIER;
-      }
-    }
+        const newRotation = {
+          x: country.rotationX,
+          y: country.rotationY
+        };
 
-    s.targetRotation = newRotation;
-    s.targetZoom = country.zoom;
-    s.previousCountry = selectedCountry;
+        // Reset transition progress
+        transitionProgress.current = 0;
+
+        if (previousCountry.current) {
+          const prevCountry = countries.find(c => c.name === previousCountry.current);
+          if (prevCountry) {
+            const prevRotation = {
+              x: prevCountry.rotationX,
+              y: prevCountry.rotationY
+            };
+            
+            const distance = calculateDistance(newRotation, prevRotation);
+            transitionSpeed.current = Math.max(
+              MIN_TRANSITION_SPEED,
+              MAX_TRANSITION_SPEED / (1 + distance)
+            );
+            // Increase max zoom out factor (max 2x at longest distances)
+            maxZoomOutFactor.current = 1 + Math.min(distance, Math.PI) / Math.PI * 1.0;
+          }
+        }
+
+        targetRotation.current = newRotation;
+        targetZoom.current = country.zoom;
+        previousCountry.current = selectedCountry;
+      }
+    } else {
+      startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
+      targetZoom.current = DEFAULT_ZOOM;
+      previousCountry.current = null;
+      transitionSpeed.current = MIN_TRANSITION_SPEED;
+      maxZoomOutFactor.current = 1;
+      transitionProgress.current = 0;
+    }
   }, [selectedCountry]);
 
   const updateRotation = (globeRef, delta) => {
     if (!globeRef.current) return;
-    const s = state.current;
 
     if (!selectedCountry) {
-      globeRef.current.rotation.y += (Math.PI * 2 * delta) / ROTATION_CONSTANTS.AUTO_ROTATE_DURATION;
-      return;
+      // Auto-rotate when no country is selected
+      globeRef.current.rotation.y += (Math.PI * 2 * delta) / (60 * 3);
+    } else {
+      // Update transition progress
+      transitionProgress.current = Math.min(1, transitionProgress.current + transitionSpeed.current);
+
+      // Create quaternion for custom axis rotation
+      const targetQuat = new THREE.Quaternion();
+      targetQuat.setFromAxisAngle(customAxis, targetRotation.current.x);
+      
+      // Create quaternion for y-rotation
+      const yQuat = new THREE.Quaternion();
+      yQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetRotation.current.y);
+      
+      // Combine the rotations
+      targetQuat.multiply(yQuat);
+      
+      // Smoothly interpolate to target quaternion using dynamic speed
+      globeRef.current.quaternion.slerp(targetQuat, transitionSpeed.current);
     }
 
-    s.transitionProgress = Math.min(1, s.transitionProgress + s.transitionSpeed);
-
-    // Calculate rotation quaternions
-    const targetQuat = new THREE.Quaternion()
-      .setFromAxisAngle(customAxis, s.targetRotation.x)
-      .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), s.targetRotation.y));
-
-    // Update globe rotation
-    globeRef.current.quaternion.slerp(targetQuat, s.transitionSpeed);
-
-    // Update camera zoom with arc effect
+    // Update camera zoom with enhanced arc effect
     const currentDistance = camera.position.length();
-    const baseStartDistance = ROTATION_CONSTANTS.DEFAULT_CAMERA_DISTANCE * s.startZoom;
-    const baseTargetDistance = ROTATION_CONSTANTS.DEFAULT_CAMERA_DISTANCE * s.targetZoom;
+    const baseStartDistance = DEFAULT_CAMERA_DISTANCE * startZoom.current;
+    const baseTargetDistance = DEFAULT_CAMERA_DISTANCE * targetZoom.current;
     
-    const arcFactor = Math.sin(s.transitionProgress * Math.PI) * (s.maxZoomOutFactor - 1);
-    const targetDistance = THREE.MathUtils.lerp(baseStartDistance, baseTargetDistance, s.transitionProgress) * (1 + arcFactor);
+    // Create smoother arc effect using sin curve
+    const arcProgress = Math.sin(transitionProgress.current * Math.PI);
+    const arcFactor = arcProgress * (maxZoomOutFactor.current - 1);
+    
+    // Interpolate between start and target distances, then apply arc
+    const linearDistance = THREE.MathUtils.lerp(baseStartDistance, baseTargetDistance, transitionProgress.current);
+    const targetDistance = linearDistance * (1 + arcFactor);
 
-    camera.position.normalize().multiplyScalar(
-      THREE.MathUtils.lerp(currentDistance, targetDistance, s.transitionSpeed)
+    const newDistance = THREE.MathUtils.lerp(
+      currentDistance,
+      targetDistance,
+      transitionSpeed.current
     );
+    camera.position.normalize().multiplyScalar(newDistance);
   };
 
   return { updateRotation };
