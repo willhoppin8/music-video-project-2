@@ -26,6 +26,9 @@ export const countries = [
   { name: "Chile", rotationX: -0.622647956, rotationY: 2.018660907, zoom: 1.2, completed: false },
   { name: "China", rotationX: 0.6259047404, rotationY: -1.048552795, zoom: 1.5, completed: false },
   { name: "Colombia", rotationX: 0.07977725478, rotationY: 2.06673251, zoom: 1.2, completed: false },
+  { name: "Croatia", rotationX: 0.7871434926, rotationY: 0.5047099537, zoom: 0.95, completed: false },
+  { name: "Cuba", rotationX: 0.375626271, rotationY: 2.127538036, zoom: 1.0, completed: false },
+  { name: "Cyprus", rotationX: 0.6130713344, rotationY: 0.1865381764, zoom: 0.9, completed: false },
   { name: "Spain", rotationX: 0.7062247925, rotationY: 0.8354358843, zoom: 1, completed: false },
   { name: "Philippines", rotationX: 0.2247931717, rotationY: -1.355357243, zoom: 1.1, completed: false }
 ];
