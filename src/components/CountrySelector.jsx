@@ -23,6 +23,31 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       return acc;
     }, {});
 
+  // Lock body scroll and handle wheel events
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      if (containerRef.current) {
+        containerRef.current.scrollTop += e.deltaY;
+      }
+    };
+
+    // Add wheel event listener to the component
+    const component = document.querySelector('.country-selector-root');
+    if (component) {
+      component.addEventListener('wheel', handleWheel, { passive: false });
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+      if (component) {
+        component.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, []);
+
   // Update letter menu visibility and size based on screen height
   useEffect(() => {
     const updateLetterMenu = () => {
@@ -62,7 +87,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   };
 
   return (
-    <div className="fixed inset-0 z-10 overflow-hidden">
+    <div className="fixed inset-0 z-10 overflow-hidden country-selector-root">
       {/* Alphabet Navigation */}
       {showLetterMenu && (
         <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
