@@ -1,6 +1,6 @@
 import { countries } from "../data/countries";
 import { MATRIX_COLORS } from "../constants/colors";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
 /**
  * Component for rendering country selection buttons
@@ -8,6 +8,8 @@ import { useRef } from "react";
 export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   const letterRefs = useRef({});
   const containerRef = useRef(null);
+  const [showLetterMenu, setShowLetterMenu] = useState(true);
+  const [letterSize, setLetterSize] = useState(24); // Default size for text-2xl
 
   // Sort and group countries by first letter
   const groupedCountries = countries
@@ -20,6 +22,26 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       acc[firstLetter].push(country);
       return acc;
     }, {});
+
+  // Update letter menu visibility and size based on screen height
+  useEffect(() => {
+    const updateLetterMenu = () => {
+      const screenHeight = window.innerHeight;
+      setShowLetterMenu(screenHeight >= 350);
+
+      // Calculate letter size based on available height
+      // Maximum height is what it currently is (24px for text-2xl)
+      // We want 30px margins on top and bottom, and 8px between letters
+      const totalLetters = Object.keys(groupedCountries).length;
+      const availableHeight = screenHeight - 60; // 30px margin top and bottom
+      const maxLetterHeight = Math.min(24, (availableHeight - (totalLetters - 1) * 8) / totalLetters);
+      setLetterSize(Math.max(12, maxLetterHeight)); // Minimum size of 12px
+    };
+
+    updateLetterMenu();
+    window.addEventListener('resize', updateLetterMenu);
+    return () => window.removeEventListener('resize', updateLetterMenu);
+  }, [groupedCountries]);
 
   const scrollToLetter = (letter) => {
     const element = letterRefs.current[letter];
@@ -42,23 +64,32 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   return (
     <div className="fixed inset-0 z-10 overflow-hidden">
       {/* Alphabet Navigation */}
-      <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
-        <div className="w-full py-8 flex flex-col items-center">
-          {Object.keys(groupedCountries).map((letter) => (
-            <button
-              key={letter}
-              onClick={() => scrollToLetter(letter)}
-              style={selectedCountry?.startsWith(letter) ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
-              className="text-2xl text-white/70 hover:text-white mb-2 cursor-pointer w-6 h-8 flex items-center justify-center"
-            >
-              {letter}
-            </button>
-          ))}
+      {showLetterMenu && (
+        <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
+          <div className="w-full py-8 flex flex-col items-center">
+            {Object.keys(groupedCountries).map((letter) => (
+              <button
+                key={letter}
+                onClick={() => scrollToLetter(letter)}
+                style={{
+                  color: selectedCountry?.startsWith(letter) ? MATRIX_COLORS.LIGHT_GREEN : undefined,
+                  fontSize: `${letterSize}px`,
+                  height: `${letterSize + 8}px`, // Add 8px for margin
+                }}
+                className="text-white/70 hover:text-white cursor-pointer w-6 flex items-center justify-center"
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Country List */}
-      <div ref={containerRef} className="absolute inset-0 overflow-y-auto scrollbar-hide ml-12">
+      <div 
+        ref={containerRef} 
+        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-4'}`}
+      >
         <div className="min-h-full flex items-center">
           <div className="w-full pl-3 py-8">
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
