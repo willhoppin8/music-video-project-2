@@ -113,10 +113,10 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       {/* Country List */}
       <div 
         ref={containerRef} 
-        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-4'}`}
+        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-0'}`}
       >
         <div className="min-h-full flex items-center">
-          <div className="w-full pl-3 py-8">
+          <div className={`w-full ${showLetterMenu ? 'pl-3' : 'pl-1'} py-8`}>
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
               <div key={letter} ref={el => letterRefs.current[letter] = el}>
                 {/* Add divider if not the first group */}
