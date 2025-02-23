@@ -115,9 +115,9 @@ export default function GlobeScene({ selectedCountry }) {
         <Globe selectedCountry={selectedCountry} />
       </Canvas>
       {/* Top fade overlay */}
-      <div className="absolute top-0 left-0 w-full h-[250px] bg-gradient-to-b from-black to-transparent pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-full h-[250px] bg-[linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.85)_15%,rgba(0,0,0,0.6)_30%,rgba(0,0,0,0.4)_50%,rgba(0,0,0,0.2)_70%,rgba(0,0,0,0.1)_85%,rgba(0,0,0,0)_100%)] pointer-events-none"></div>
       {/* Bottom fade overlay */}
-      <div className="absolute bottom-0 left-0 w-full h-[250px] bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full h-[250px] bg-[linear-gradient(to_top,rgba(0,0,0,1)_0%,rgba(0,0,0,0.85)_15%,rgba(0,0,0,0.6)_30%,rgba(0,0,0,0.4)_50%,rgba(0,0,0,0.2)_70%,rgba(0,0,0,0.1)_85%,rgba(0,0,0,0)_100%)] pointer-events-none"></div>
     </div>
   );
 }
