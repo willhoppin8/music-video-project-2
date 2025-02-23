@@ -4,6 +4,7 @@ import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { MATRIX_COLORS } from "../constants/colors";
 import useGlobeRotation from "../hooks/useGlobeRotation";
+import { countries } from "../data/countries";
 
 /**
  * Globe component that renders a 3D model and highlights the selected country
@@ -24,11 +25,17 @@ export default function Globe({ selectedCountry }) {
     });
   }, []);
 
-  // Create a static green material for highlighting
+  // Create materials for highlighting
   const highlightMaterial = new THREE.MeshStandardMaterial({
     color: new THREE.Color(MATRIX_COLORS.LIGHT_GREEN),
     emissive: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
     emissiveIntensity: 1
+  });
+
+  const completedMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
+    emissive: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
+    emissiveIntensity: 0.3
   });
 
   useFrame((_, delta) => {
@@ -37,8 +44,12 @@ export default function Globe({ selectedCountry }) {
     // Update materials
     Object.values(nodes).forEach((mesh) => {
       if (mesh.isMesh) {
+        const country = mesh.name !== "Ocean" && countries.find(c => c.name === mesh.name);
+        
         if (mesh.name === selectedCountry) {
           mesh.material = highlightMaterial;
+        } else if (country?.completed) {
+          mesh.material = completedMaterial;
         } else {
           if (originalMaterials.current[mesh.name]) {
             mesh.material = originalMaterials.current[mesh.name].clone();
