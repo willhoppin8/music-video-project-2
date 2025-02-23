@@ -113,7 +113,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       {/* Country List */}
       <div 
         ref={containerRef} 
-        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-0'}`}
+        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-2'}`}
       >
         <div className="min-h-full flex items-center">
           <div className={`w-full ${showLetterMenu ? 'pl-3' : 'pl-1'} py-8`}>
