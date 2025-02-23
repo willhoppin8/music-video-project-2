@@ -7,6 +7,7 @@ import { useRef } from "react";
  */
 export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   const letterRefs = useRef({});
+  const containerRef = useRef(null);
 
   // Sort and group countries by first letter
   const groupedCountries = countries
@@ -21,13 +22,21 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
     }, {});
 
   const scrollToLetter = (letter) => {
-    letterRefs.current[letter]?.scrollIntoView({ behavior: 'smooth' });
+    const element = letterRefs.current[letter];
+    const container = containerRef.current;
+    if (element && container) {
+      const elementPosition = element.offsetTop;
+      container.scrollTo({
+        top: elementPosition - 75,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
     <div className="fixed inset-0 z-10 overflow-hidden">
       {/* Alphabet Navigation */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 flex items-center">
+      <div className="absolute left-0 top-0 bottom-0 w-6 flex items-center">
         <div className="w-full py-8 flex flex-col items-center">
           {Object.keys(groupedCountries).map((letter) => (
             <button
@@ -42,7 +51,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       </div>
 
       {/* Country List */}
-      <div className="absolute inset-0 overflow-y-auto scrollbar-hide ml-16">
+      <div ref={containerRef} className="absolute inset-0 overflow-y-auto scrollbar-hide ml-6">
         <div className="min-h-full flex items-center">
           <div className="w-full pl-8 py-8">
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
