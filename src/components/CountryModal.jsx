@@ -16,7 +16,7 @@ export default function CountryModal({ countryName, onClose }) {
           <IoClose size={32} />
         </button>
         <h2 
-          className="text-2xl font-bold px-8 py-6 break-words hyphens-auto pr-[65px]" 
+          className="text-[22px] font-bold px-8 py-6 break-words hyphens-auto pr-[65px]" 
           style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
           lang="en"
         >
