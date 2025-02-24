@@ -11,14 +11,25 @@ import CountryModal from "./components/CountryModal";
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasManuallyClosed, setHasManuallyClosed] = useState(false);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
-    setIsModalOpen(true);
+    // Only open modal if it hasn't been manually closed
+    if (!hasManuallyClosed) {
+      setIsModalOpen(true);
+    }
   };
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+    const newIsOpen = !isModalOpen;
+    setIsModalOpen(newIsOpen);
+    // Track if user manually closes the modal
+    if (!newIsOpen) {
+      setHasManuallyClosed(true);
+    } else {
+      setHasManuallyClosed(false);
+    }
   };
 
   return (
