@@ -25,6 +25,14 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
             >
               {countryName}
             </h2>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <p 
+                className="text-base italic"
+                style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
+              >
+                no content yet...
+              </p>
+            </div>
           </div>
         </div>
       ) : (
