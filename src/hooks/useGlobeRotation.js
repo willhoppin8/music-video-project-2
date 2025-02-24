@@ -6,6 +6,7 @@ const DEFAULT_ZOOM = 1.5;
 const DEFAULT_CAMERA_DISTANCE = 270;
 const MIN_TRANSITION_SPEED = 0.03; // Double current speed (was 0.02)
 const MAX_TRANSITION_SPEED = 0.09; // Double current speed (was 0.06)
+const RESET_TRANSITION_SPEED = 0.12; // Faster speed for resetting to default state
 
 /**
  * Custom hook to handle globe rotation and zoom logic
@@ -81,7 +82,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
       startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
       targetZoom.current = DEFAULT_ZOOM;
       previousCountry.current = null;
-      transitionSpeed.current = MIN_TRANSITION_SPEED;
+      transitionSpeed.current = RESET_TRANSITION_SPEED; // Use faster speed when resetting
       maxZoomOutFactor.current = 1;
       transitionProgress.current = 0;
     }
@@ -93,24 +94,35 @@ export default function useGlobeRotation(selectedCountry, camera) {
     if (!selectedCountry) {
       // Auto-rotate when no country is selected
       globeRef.current.rotation.y += (Math.PI * 2 * delta) / (60 * 3);
-    } else {
-      // Update transition progress
-      transitionProgress.current = Math.min(1, transitionProgress.current + transitionSpeed.current);
-
-      // Create quaternion for custom axis rotation
-      const targetQuat = new THREE.Quaternion();
-      targetQuat.setFromAxisAngle(customAxis, targetRotation.current.x);
       
-      // Create quaternion for y-rotation
-      const yQuat = new THREE.Quaternion();
-      yQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetRotation.current.y);
-      
-      // Combine the rotations
-      targetQuat.multiply(yQuat);
-      
-      // Smoothly interpolate to target quaternion using dynamic speed
-      globeRef.current.quaternion.slerp(targetQuat, transitionSpeed.current);
+      // Direct lerp to default zoom when no country is selected
+      const currentDistance = camera.position.length();
+      const targetDistance = DEFAULT_CAMERA_DISTANCE * DEFAULT_ZOOM;
+      const newDistance = THREE.MathUtils.lerp(
+        currentDistance,
+        targetDistance,
+        RESET_TRANSITION_SPEED
+      );
+      camera.position.normalize().multiplyScalar(newDistance);
+      return;
     }
+
+    // Update transition progress
+    transitionProgress.current = Math.min(1, transitionProgress.current + transitionSpeed.current);
+
+    // Create quaternion for custom axis rotation
+    const targetQuat = new THREE.Quaternion();
+    targetQuat.setFromAxisAngle(customAxis, targetRotation.current.x);
+    
+    // Create quaternion for y-rotation
+    const yQuat = new THREE.Quaternion();
+    yQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), targetRotation.current.y);
+    
+    // Combine the rotations
+    targetQuat.multiply(yQuat);
+    
+    // Smoothly interpolate to target quaternion using dynamic speed
+    globeRef.current.quaternion.slerp(targetQuat, transitionSpeed.current);
 
     // Update camera zoom with enhanced arc effect
     const currentDistance = camera.position.length();
