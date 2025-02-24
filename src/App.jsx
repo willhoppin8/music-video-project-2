@@ -10,16 +10,30 @@ import CountryModal from "./components/CountryModal";
  */
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsModalOpen(true);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <div className="w-screen h-screen relative">
       <div className="w-full h-full">
         <GlobeScene selectedCountry={selectedCountry} />
       </div>
-      <CountrySelector onCountrySelect={setSelectedCountry} selectedCountry={selectedCountry} />
+      <CountrySelector onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
       <ProgressTracker />
       <SocialLinks />
-      <CountryModal countryName={selectedCountry} onClose={() => setSelectedCountry(null)} />
+      <CountryModal 
+        countryName={selectedCountry} 
+        onClose={toggleModal}
+        isOpen={isModalOpen}
+      />
     </div>
   );
 }
