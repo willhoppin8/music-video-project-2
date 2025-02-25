@@ -14,10 +14,18 @@ function App() {
   const [hasManuallyClosed, setHasManuallyClosed] = useState(false);
 
   const handleCountrySelect = (country) => {
-    setSelectedCountry(country);
-    // Only open modal if it hasn't been manually closed
-    if (!hasManuallyClosed) {
-      setIsModalOpen(true);
+    // If clicking the same country, unfocus it
+    if (selectedCountry === country) {
+      setSelectedCountry(null);
+      setIsModalOpen(false);
+      setHasManuallyClosed(false);
+    } else {
+      // If clicking a different country, select it
+      setSelectedCountry(country);
+      // Only open modal if it hasn't been manually closed
+      if (!hasManuallyClosed) {
+        setIsModalOpen(true);
+      }
     }
   };
 
