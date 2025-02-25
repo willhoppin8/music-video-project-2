@@ -43,19 +43,21 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
       ) : (
         <button 
           onClick={onClose}
-          className="group fixed top-[100px] right-4 flex items-center gap-2 z-50 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-xl cursor-pointer transition-all"
+          className="group fixed top-[100px] right-4 z-50 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-xl cursor-pointer transition-all min-w-[235px] sm:min-w-[275px] max-w-[33%]"
         >
-          <div className="opacity-100 group-hover:opacity-70 transition-all duration-200">
-            <span 
-              className="text-[18px] font-bold"
-              style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
-            >
-              {formatCountryName(countryName)}
-            </span>
-          </div>
-          <div className="opacity-100 group-hover:opacity-70 transition-all duration-200">
-            <div style={{ color: MATRIX_COLORS.LIGHT_GREEN }}>
-              <IoInformationCircle size={24} />
+          <div className="flex items-center justify-between w-full">
+            <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 overflow-hidden mr-2 flex-1">
+              <span 
+                className="text-[18px] font-bold truncate block"
+                style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
+              >
+                {formatCountryName(countryName)}
+              </span>
+            </div>
+            <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 flex-shrink-0">
+              <div style={{ color: MATRIX_COLORS.LIGHT_GREEN }}>
+                <IoInformationCircle size={24} />
+              </div>
             </div>
           </div>
         </button>
