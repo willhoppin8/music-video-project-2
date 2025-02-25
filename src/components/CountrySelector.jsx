@@ -68,6 +68,38 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
     return () => window.removeEventListener('resize', updateLetterMenu);
   }, [groupedCountries]);
 
+  const [currentLetter, setCurrentLetter] = useState('A');
+
+  // Update current letter based on scroll position
+  const updateCurrentLetter = () => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollPosition = container.scrollTop + 75; // Add offset to match scroll position
+    let currentLetter = null;
+
+    // Find the letter whose section is currently at the top
+    for (const letter of Object.keys(groupedCountries)) {
+      const element = letterRefs.current[letter];
+      if (element && element.offsetTop <= scrollPosition) {
+        currentLetter = letter;
+      } else {
+        break;
+      }
+    }
+
+    setCurrentLetter(currentLetter);
+  };
+
+  // Add scroll event listener
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', updateCurrentLetter);
+      return () => container.removeEventListener('scroll', updateCurrentLetter);
+    }
+  }, []);
+
   const scrollToLetter = (letter) => {
     const element = letterRefs.current[letter];
     const container = containerRef.current;
@@ -77,12 +109,6 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
         top: elementPosition - 75,
         behavior: 'smooth'
       });
-      
-      // Auto-select the first country in this letter group
-      const firstCountryInGroup = groupedCountries[letter][0];
-      if (firstCountryInGroup) {
-        onCountrySelect(firstCountryInGroup.name);
-      }
     }
   };
 
@@ -97,7 +123,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 key={letter}
                 onClick={() => scrollToLetter(letter)}
                 style={{
-                  color: selectedCountry?.startsWith(letter) ? MATRIX_COLORS.LIGHT_GREEN : undefined,
+                  color: letter === currentLetter ? MATRIX_COLORS.LIGHT_GREEN : undefined,
                   fontSize: `${letterSize}px`,
                   height: `${letterSize + 8}px`, // Add 8px for margin
                 }}
