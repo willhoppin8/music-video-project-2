@@ -11,11 +11,22 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   const [showLetterMenu, setShowLetterMenu] = useState(true);
   const [letterSize, setLetterSize] = useState(24); // Default size for text-2xl
 
-  // Sort and group countries by first letter
+  // Helper function to get sortable name (removing 'The_' prefix)
+  const getSortableName = (name) => {
+    return name.startsWith('The_') ? name.slice(4) : name;
+  };
+
+  // Helper function to format country name for display (replace underscores with spaces)
+  const formatCountryName = (name) => {
+    return name.replace(/_/g, ' ');
+  };
+
+  // Sort and group countries by first letter (ignoring 'The_' prefix)
   const groupedCountries = countries
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => getSortableName(a.name).localeCompare(getSortableName(b.name)))
     .reduce((acc, country) => {
-      const firstLetter = country.name[0].toUpperCase();
+      // Use the first letter after 'The_' if present
+      const firstLetter = getSortableName(country.name)[0].toUpperCase();
       if (!acc[firstLetter]) {
         acc[firstLetter] = [];
       }
@@ -166,7 +177,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                         ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
-                      {country.name}
+                      {formatCountryName(country.name)}
                     </button>
                   </div>
                 ))}

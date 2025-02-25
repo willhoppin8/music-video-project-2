@@ -6,6 +6,11 @@ import { IoInformationCircle } from 'react-icons/io5';
 export default function CountryModal({ countryName, onClose, isOpen }) {
   if (!countryName) return null;
 
+  // Helper function to format country name for display (replace underscores with spaces)
+  const formatCountryName = (name) => {
+    return name.replace(/_/g, ' ');
+  };
+
   return (
     <>
       {isOpen ? (
@@ -23,7 +28,7 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
               style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
               lang="en"
             >
-              {countryName}
+              {formatCountryName(countryName)}
             </h2>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <p 
@@ -45,7 +50,7 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
               className="text-[18px] font-bold"
               style={{ color: MATRIX_COLORS.LIGHT_GREEN }}
             >
-              {countryName}
+              {formatCountryName(countryName)}
             </span>
           </div>
           <div className="opacity-100 group-hover:opacity-70 transition-all duration-200">
