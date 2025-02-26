@@ -4,13 +4,17 @@ import Globe from "./Globe";
 /**
  * GlobeScene component that renders the 3D globe within a Canvas
  */
-export default function GlobeScene({ selectedCountry }) {
+export default function GlobeScene({ selectedCountry, onCountrySelect }) {
   return (
     <div className="relative w-full h-full">
-      <Canvas camera={{ position: [250, 0, 270], fov: 50 }} className="w-full h-full">
+      <Canvas 
+        camera={{ position: [250, 0, 270], fov: 50 }} 
+        className="w-full h-full"
+        onPointerMissed={() => onCountrySelect(null)}
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[50, 5, 5]} intensity={3.5} />
-        <Globe selectedCountry={selectedCountry} />
+        <Globe selectedCountry={selectedCountry} onCountrySelect={onCountrySelect} />
       </Canvas>
       
       {/* Fade overlays */}

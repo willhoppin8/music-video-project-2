@@ -124,7 +124,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   };
 
   return (
-    <div className="fixed inset-0 z-10 overflow-hidden country-selector-root">
+    <div className="fixed left-0 top-0 bottom-0 z-50 overflow-hidden country-selector-root bg-black/30 backdrop-blur-sm" style={{ maxWidth: '400px' }}>
       {/* Alphabet Navigation */}
       {showLetterMenu && (
         <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
@@ -150,7 +150,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
       {/* Country List */}
       <div 
         ref={containerRef} 
-        className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-2'}`}
+        className={`absolute top-0 bottom-0 right-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'left-12' : 'left-2'}`}
       >
         <div className="min-h-full flex items-center">
           <div className={`w-full ${showLetterMenu ? 'pl-3 py-8' : 'pl-1 py-3'}`}>

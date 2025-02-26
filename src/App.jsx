@@ -42,17 +42,19 @@ function App() {
 
   return (
     <div className="w-screen h-screen relative">
-      <div className="w-full h-full">
-        <GlobeScene selectedCountry={selectedCountry} />
+      <div className="w-full h-full absolute inset-0">
+        <GlobeScene selectedCountry={selectedCountry} onCountrySelect={handleCountrySelect} />
       </div>
-      <CountrySelector onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
-      <ProgressTracker />
-      <SocialLinks />
-      <CountryModal 
-        countryName={selectedCountry} 
-        onClose={toggleModal}
-        isOpen={isModalOpen}
-      />
+      <div className="relative z-50">
+        <CountrySelector onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
+        <ProgressTracker />
+        <SocialLinks />
+        <CountryModal 
+          countryName={selectedCountry} 
+          onClose={toggleModal}
+          isOpen={isModalOpen}
+        />
+      </div>
     </div>
   );
 }
