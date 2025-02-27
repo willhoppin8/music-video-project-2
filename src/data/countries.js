@@ -172,5 +172,6 @@ export const countries = [
   { name: "New_Caledonia", rotationX: -0.3717376774, rotationY: -2.118228442, zoom: 0.9, completed: false },
   { name: "Northern_Ireland", rotationX: 0.9562257546, rotationY: 0.883312011, zoom: 0.95, completed: false },
   { name: "Puerto_Rico", rotationX: 0.3180129523, rotationY: 1.932216494, zoom: 0.9, completed: false },
-  { name: "United_States", rotationX: 0.6473461102, rotationY: 2.440505242, zoom: 1.5, completed: false }
+  { name: "United_States", rotationX: 0.6473461102, rotationY: 2.440505242, zoom: 1.5, completed: false },
+  { name: "Togo", rotationX: 0.1504386549, rotationY: 0.7556045243, zoom: 0.9, completed: false }
 ];
