@@ -9,7 +9,7 @@ export default function ProgressTracker() {
   return (
     <div className="fixed top-4 right-4 z-50 text-right">
       <div style={{ color: `${COLORS.LIGHT_STATE}70` }} className="text-4xl font-normal">
-        <span style={{ color: COLORS.SELECTED }} className="font-bold">{completedCount}</span>
+        <span style={{ color: COLORS.SELECTED_TEXT }} className="font-bold">{completedCount}</span>
         <span className="mx-0.5">/</span>
         {totalCount}
       </div>

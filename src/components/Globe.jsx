@@ -31,15 +31,7 @@ export default function Globe({ selectedCountry }) {
     metalness: 0.2,
     roughness: 0.8,
     emissive: new THREE.Color(COLORS.SELECTED),
-    emissiveIntensity: 15.0 // Even higher to overcome the higher threshold
-  });
-
-  const completedMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(COLORS.UNSELECTED_VISITED),
-    emissive: new THREE.Color(COLORS.DARK_STATE), // Changed to dark state to prevent any glow
-    emissiveIntensity: 0,
-    metalness: 0.2,
-    roughness: 0.8
+    emissiveIntensity: 2.0 // Reduced for more subtle, even glow
   });
 
   useFrame((_, delta) => {
@@ -50,10 +42,8 @@ export default function Globe({ selectedCountry }) {
       if (mesh.isMesh) {
         const country = mesh.name !== "Ocean" && countries.find(c => c.name === mesh.name);
         
-        if (mesh.name === selectedCountry) {
+        if (mesh.name === selectedCountry || country?.completed) {
           mesh.material = highlightMaterial;
-        } else if (country?.completed) {
-          mesh.material = completedMaterial;
         } else {
           if (originalMaterials.current[mesh.name]) {
             mesh.material = originalMaterials.current[mesh.name].clone();
@@ -63,12 +53,10 @@ export default function Globe({ selectedCountry }) {
               ? COLORS.LIGHT_STATE
               : COLORS.DARK_STATE
           );
-          if (mesh.name !== "Ocean") {
-            mesh.material.metalness = 0.2;
-            mesh.material.roughness = 0.8;
-            mesh.material.emissive = new THREE.Color(COLORS.DARK_STATE);
-            mesh.material.emissiveIntensity = 0;
-          }
+          mesh.material.metalness = 0.2;
+          mesh.material.roughness = 0.8;
+          mesh.material.emissive = new THREE.Color(0x000000);
+          mesh.material.emissiveIntensity = 0;
         }
       }
     });

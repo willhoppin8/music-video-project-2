@@ -134,7 +134,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 key={letter}
                 onClick={() => scrollToLetter(letter)}
                 style={{
-                  color: letter === currentLetter ? COLORS.SELECTED : undefined,
+                  color: letter === currentLetter ? COLORS.SELECTED_TEXT : undefined,
                   fontSize: `${letterSize}px`,
                   height: `${letterSize + 8}px`, // Add 8px for margin
                 }}
@@ -166,13 +166,13 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {letterCountries.map((country) => (
                   <div key={country.name} className={`flex items-center ${showLetterMenu ? 'mb-1' : 'mb-0.5'}`}>
                     <span 
-                      style={country.name === selectedCountry ? { color: COLORS.SELECTED } : { opacity: 0 }}
+                      style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : { opacity: 0 }}
                       className={`${showLetterMenu ? 'text-sm' : 'text-[10px]'} w-4 mr-px`}
                     >
                       ▶
                     </span>
                     <button
-                      style={country.name === selectedCountry ? { color: COLORS.SELECTED } : undefined}
+                      style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : undefined}
                       className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-sm'}
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}

@@ -19,13 +19,13 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
             <button 
               onClick={onClose}
               className="absolute top-6 right-6 cursor-pointer opacity-100 hover:opacity-70 transition-all duration-200"
-              style={{ color: COLORS.SELECTED }}
+              style={{ color: COLORS.SELECTED_TEXT }}
             >
               <IoClose size={26} className="sm:w-8 sm:h-8" />
             </button>
             <h2 
               className="text-[16px] sm:text-[22px] font-bold px-6 sm:px-8 py-6 break-words hyphens-auto pr-[65px]" 
-              style={{ color: COLORS.SELECTED }}
+              style={{ color: COLORS.SELECTED_TEXT }}
               lang="en"
             >
               {formatCountryName(countryName)}
@@ -33,7 +33,7 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <p 
                 className="text-base italic"
-                style={{ color: COLORS.SELECTED }}
+                style={{ color: COLORS.SELECTED_TEXT }}
               >
                 no content yet...
               </p>
@@ -50,13 +50,13 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
             <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 overflow-hidden mr-2 flex-1">
               <span 
                 className="text-[18px] font-bold truncate block"
-                style={{ color: COLORS.SELECTED }}
+                style={{ color: COLORS.SELECTED_TEXT }}
               >
                 {formatCountryName(countryName)}
               </span>
             </div>
             <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 flex-shrink-0">
-              <div style={{ color: COLORS.SELECTED }}>
+              <div style={{ color: COLORS.SELECTED_TEXT }}>
                 <IoInformationCircle size={24} />
               </div>
             </div>

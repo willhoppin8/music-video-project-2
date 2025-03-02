@@ -14,15 +14,16 @@ export default function GlobeScene({ selectedCountry }) {
         className="w-full h-full"
         style={{ background: COLORS.DARK_STATE }}
       >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[50, 5, 5]} intensity={3.5} />
+        <ambientLight intensity={0.2} />
+        <directionalLight position={[50, 5, 5]} intensity={4.5} />
         <Globe selectedCountry={selectedCountry} />
         <EffectComposer>
           <Bloom 
-            intensity={1.0}
-            luminanceThreshold={5.0}
-            luminanceSmoothing={10.0}
-            mipmapBlur={false}
+            intensity={0.2}
+            luminanceThreshold={0.3}
+            luminanceSmoothing={1.5}
+            mipmapBlur={true}
+            levels={10}
           />
         </EffectComposer>
       </Canvas>
