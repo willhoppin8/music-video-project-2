@@ -2,6 +2,68 @@ import { Canvas } from "@react-three/fiber";
 import Globe from "./Globe";
 import { COLORS } from "../constants/colors";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { useRef, useState, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
+
+// Default bloom values (when no country is selected)
+const DEFAULT_BLOOM = {
+  intensity: 0.2,
+  luminanceThreshold: 0.3,
+  luminanceSmoothing: 1.5,
+  mipmapBlur: true,
+  levels: 10
+};
+
+// Selected state bloom values (when a country is selected)
+const SELECTED_BLOOM = {
+  intensity: 1.0,
+  luminanceThreshold: 0.3,
+  luminanceSmoothing: 1.5,
+  mipmapBlur: true,
+  levels: 4.3
+};
+
+// Component to handle bloom effect interpolation
+function BloomEffect({ selectedCountry }) {
+  const [bloomValues, setBloomValues] = useState({
+    intensity: DEFAULT_BLOOM.intensity,
+    luminanceThreshold: DEFAULT_BLOOM.luminanceThreshold,
+    luminanceSmoothing: DEFAULT_BLOOM.luminanceSmoothing,
+    levels: DEFAULT_BLOOM.levels
+  });
+
+  // Track previous selected state to handle transitions
+  const prevSelectedRef = useRef(null);
+
+  useEffect(() => {
+    prevSelectedRef.current = selectedCountry;
+  }, [selectedCountry]);
+
+  useFrame(() => {
+    const transitionSpeed = 0.1;
+    const target = selectedCountry ? SELECTED_BLOOM : DEFAULT_BLOOM;
+
+    // Update values with state setter to ensure consistency
+    setBloomValues(current => ({
+      intensity: current.intensity + (target.intensity - current.intensity) * transitionSpeed,
+      luminanceThreshold: current.luminanceThreshold + (target.luminanceThreshold - current.luminanceThreshold) * transitionSpeed,
+      luminanceSmoothing: current.luminanceSmoothing + (target.luminanceSmoothing - current.luminanceSmoothing) * transitionSpeed,
+      levels: current.levels + (target.levels - current.levels) * transitionSpeed
+    }));
+  });
+
+  return (
+    <EffectComposer>
+      <Bloom 
+        intensity={bloomValues.intensity}
+        luminanceThreshold={bloomValues.luminanceThreshold}
+        luminanceSmoothing={bloomValues.luminanceSmoothing}
+        mipmapBlur={true}
+        levels={bloomValues.levels}
+      />
+    </EffectComposer>
+  );
+}
 
 /**
  * GlobeScene component that renders the 3D globe within a Canvas
@@ -17,15 +79,7 @@ export default function GlobeScene({ selectedCountry }) {
         <ambientLight intensity={0.2} />
         <directionalLight position={[50, 5, 5]} intensity={4.5} />
         <Globe selectedCountry={selectedCountry} />
-        <EffectComposer>
-          <Bloom 
-            intensity={0.2}
-            luminanceThreshold={0.3}
-            luminanceSmoothing={1.5}
-            mipmapBlur={true}
-            levels={10}
-          />
-        </EffectComposer>
+        <BloomEffect selectedCountry={selectedCountry} />
       </Canvas>
       
       {/* Fade overlays */}

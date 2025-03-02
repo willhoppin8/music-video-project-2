@@ -15,6 +15,7 @@ export default function Globe({ selectedCountry }) {
   const globeRef = useRef();
   const { camera } = useThree();
   const { updateRotation } = useGlobeRotation(selectedCountry, camera);
+  const transitionSpeed = 0.1; // Speed of color transition
 
   // Store original materials on first render
   useEffect(() => {
@@ -31,8 +32,20 @@ export default function Globe({ selectedCountry }) {
     metalness: 0.2,
     roughness: 0.8,
     emissive: new THREE.Color(COLORS.SELECTED),
-    emissiveIntensity: 2.0 // Reduced for more subtle, even glow
+    emissiveIntensity: 2.0
   });
+
+  // Create material for completed countries when another is selected
+  const completedDimmedMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(COLORS.COMPLETED_DIMMED),
+    metalness: 0.2,
+    roughness: 0.8,
+    emissive: new THREE.Color(COLORS.COMPLETED_DIMMED),
+    emissiveIntensity: 1.5
+  });
+
+  // Keep track of transition materials for completed countries
+  const transitionMaterials = useRef({});
 
   useFrame((_, delta) => {
     updateRotation(globeRef, delta);
@@ -42,9 +55,34 @@ export default function Globe({ selectedCountry }) {
       if (mesh.isMesh) {
         const country = mesh.name !== "Ocean" && countries.find(c => c.name === mesh.name);
         
-        if (mesh.name === selectedCountry || country?.completed) {
+        if (mesh.name === selectedCountry) {
+          // Selected country gets bright orange
           mesh.material = highlightMaterial;
+        } else if (country?.completed) {
+          // Initialize transition material if it doesn't exist
+          if (!transitionMaterials.current[mesh.name]) {
+            transitionMaterials.current[mesh.name] = new THREE.MeshStandardMaterial({
+              color: new THREE.Color(COLORS.SELECTED),
+              metalness: 0.2,
+              roughness: 0.8,
+              emissive: new THREE.Color(COLORS.SELECTED),
+              emissiveIntensity: 2.0
+            });
+          }
+
+          const material = transitionMaterials.current[mesh.name];
+          const targetColor = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.SELECTED);
+          const targetEmissive = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.SELECTED);
+          const targetIntensity = selectedCountry ? 1.5 : 2.0;
+
+          // Interpolate color
+          material.color.lerp(targetColor, transitionSpeed);
+          material.emissive.lerp(targetEmissive, transitionSpeed);
+          material.emissiveIntensity += (targetIntensity - material.emissiveIntensity) * transitionSpeed;
+
+          mesh.material = material;
         } else {
+          // Non-completed countries get default dark state
           if (originalMaterials.current[mesh.name]) {
             mesh.material = originalMaterials.current[mesh.name].clone();
           }
