@@ -27,9 +27,7 @@ export default function Globe({ selectedCountry }) {
 
   // Create materials for highlighting
   const highlightMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(MATRIX_COLORS.LIGHT_GREEN),
-    emissive: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
-    emissiveIntensity: 1
+    color: new THREE.Color(MATRIX_COLORS.LIGHT_GREEN)
   });
 
   const completedMaterial = new THREE.MeshStandardMaterial({
