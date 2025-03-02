@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import Globe from "./Globe";
 import { COLORS } from "../constants/colors";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 
 /**
  * GlobeScene component that renders the 3D globe within a Canvas
@@ -16,6 +17,14 @@ export default function GlobeScene({ selectedCountry }) {
         <ambientLight intensity={0.5} />
         <directionalLight position={[50, 5, 5]} intensity={3.5} />
         <Globe selectedCountry={selectedCountry} />
+        <EffectComposer>
+          <Bloom 
+            intensity={1.0}
+            luminanceThreshold={5.0}
+            luminanceSmoothing={10.0}
+            mipmapBlur={false}
+          />
+        </EffectComposer>
       </Canvas>
       
       {/* Fade overlays */}
