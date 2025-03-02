@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { MATRIX_COLORS } from "../constants/colors";
+import { COLORS } from "../constants/colors";
 import useGlobeRotation from "../hooks/useGlobeRotation";
 import { countries } from "../data/countries";
 
@@ -27,12 +27,12 @@ export default function Globe({ selectedCountry }) {
 
   // Create materials for highlighting
   const highlightMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(MATRIX_COLORS.LIGHT_GREEN)
+    color: new THREE.Color(COLORS.SELECTED)
   });
 
   const completedMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
-    emissive: new THREE.Color(MATRIX_COLORS.DARK_GREEN),
+    color: new THREE.Color(COLORS.UNSELECTED_VISITED),
+    emissive: new THREE.Color(COLORS.UNSELECTED_VISITED),
     emissiveIntensity: 0.3
   });
 
@@ -54,8 +54,8 @@ export default function Globe({ selectedCountry }) {
           }
           mesh.material.color.set(
             mesh.name === "Ocean" 
-              ? MATRIX_COLORS.MATRIX_WHITE 
-              : MATRIX_COLORS.MATRIX_BLACK
+              ? COLORS.LIGHT_STATE
+              : COLORS.DARK_STATE
           );
         }
       }

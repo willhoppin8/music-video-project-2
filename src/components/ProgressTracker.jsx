@@ -1,5 +1,5 @@
 import { countries } from "../data/countries";
-import { MATRIX_COLORS } from "../constants/colors";
+import { COLORS } from "../constants/colors";
 
 export default function ProgressTracker() {
   const completedCount = countries.filter(country => country.completed).length;
@@ -8,12 +8,12 @@ export default function ProgressTracker() {
 
   return (
     <div className="fixed top-4 right-4 z-50 text-right">
-      <div className="text-4xl font-normal text-white/70">
-        <span className="text-[#00FF41] font-bold">{completedCount}</span>
+      <div style={{ color: `${COLORS.LIGHT_STATE}70` }} className="text-4xl font-normal">
+        <span style={{ color: COLORS.SELECTED }} className="font-bold">{completedCount}</span>
         <span className="mx-0.5">/</span>
         {totalCount}
       </div>
-      <div className="text-lg italic text-white/70">
+      <div style={{ color: `${COLORS.LIGHT_STATE}70` }} className="text-lg italic">
         {percentage}% complete
       </div>
     </div>

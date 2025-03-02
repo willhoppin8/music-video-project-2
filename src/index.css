@@ -9,11 +9,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: black;
+  margin: 0;
   color: white;
+}
+
+:root {
+  --dark-state: #0D0208;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

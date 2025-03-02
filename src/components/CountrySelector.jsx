@@ -1,5 +1,5 @@
 import { countries } from "../data/countries";
-import { MATRIX_COLORS } from "../constants/colors";
+import { COLORS } from "../constants/colors";
 import { useRef, useEffect, useState } from "react";
 
 /**
@@ -134,11 +134,11 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 key={letter}
                 onClick={() => scrollToLetter(letter)}
                 style={{
-                  color: letter === currentLetter ? MATRIX_COLORS.LIGHT_GREEN : undefined,
+                  color: letter === currentLetter ? COLORS.SELECTED : undefined,
                   fontSize: `${letterSize}px`,
                   height: `${letterSize + 8}px`, // Add 8px for margin
                 }}
-                className="text-white/70 hover:text-white cursor-pointer w-6 flex items-center justify-center"
+                className={`hover:text-[${COLORS.LIGHT_STATE}] text-[${COLORS.LIGHT_STATE}]/70 cursor-pointer w-6 flex items-center justify-center`}
               >
                 {letter}
               </button>
@@ -160,21 +160,21 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className={`h-px bg-white ${showLetterMenu ? 'w-32 mt-[3px] mb-2' : 'w-20 mt-[2px] mb-1'}`} />
+                    <div className={`h-px ${showLetterMenu ? 'w-32 mt-[3px] mb-2' : 'w-20 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
                   <div key={country.name} className={`flex items-center ${showLetterMenu ? 'mb-1' : 'mb-0.5'}`}>
                     <span 
-                      style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : { opacity: 0 }}
+                      style={country.name === selectedCountry ? { color: COLORS.SELECTED } : { opacity: 0 }}
                       className={`${showLetterMenu ? 'text-sm' : 'text-[10px]'} w-4 mr-px`}
                     >
                       ▶
                     </span>
                     <button
-                      style={country.name === selectedCountry ? { color: MATRIX_COLORS.LIGHT_GREEN } : undefined}
+                      style={country.name === selectedCountry ? { color: COLORS.SELECTED } : undefined}
                       className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-sm'}
-                        ${country.completed ? 'font-bold text-white' : 'text-white/70'}`}
+                        ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
                       {formatCountryName(country.name)}
