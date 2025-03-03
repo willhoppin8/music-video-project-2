@@ -101,7 +101,7 @@ export default function GlobeScene({ selectedCountry }) {
       {isLoading && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-50">
           <p 
-            className="text-2xl italic animate-pulse"
+            className="text-lg sm:text-2xl italic animate-pulse w-[85px] sm:w-auto"
             style={{ color: COLORS.SELECTED_TEXT }}
           >
             loading 3D objects...
