@@ -64,6 +64,15 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     const intersects = raycaster.current.intersectObjects(meshes);
     console.log("Intersections:", intersects.length); // Debug log
 
+    // Handle Ocean clicks differently based on selection state
+    if (intersects.length > 0 && intersects[0].object.name === "Ocean") {
+      if (selectedCountry) {
+        // If a country is selected, clicking ocean deselects it
+        onCountrySelect(null);
+      }
+      return;
+    }
+
     // Find the first intersection that isn't the ocean
     const countryIntersection = intersects.find(
       (intersect) => intersect.object.name !== "Ocean"
