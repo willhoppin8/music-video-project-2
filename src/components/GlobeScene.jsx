@@ -69,7 +69,7 @@ function BloomEffect({ selectedCountry }) {
 /**
  * GlobeScene component that renders the 3D globe within a Canvas
  */
-export default function GlobeScene({ selectedCountry }) {
+export default function GlobeScene({ selectedCountry, onCountrySelect }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function GlobeScene({ selectedCountry }) {
       >
         <ambientLight intensity={1} />
         <directionalLight position={[50, 5, -35]} intensity={2.8} />
-        <Globe selectedCountry={selectedCountry} />
+        <Globe selectedCountry={selectedCountry} onCountrySelect={onCountrySelect} />
         <BloomEffect selectedCountry={selectedCountry} />
       </Canvas>
       

@@ -43,7 +43,7 @@ function App() {
   return (
     <div className="w-screen h-screen relative">
       <div className="w-full h-full">
-        <GlobeScene selectedCountry={selectedCountry} />
+        <GlobeScene selectedCountry={selectedCountry} onCountrySelect={handleCountrySelect} />
       </div>
       <CountrySelector onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
       <ProgressTracker />
