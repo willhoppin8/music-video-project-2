@@ -7,7 +7,7 @@ import { useFrame } from "@react-three/fiber";
 
 // Default bloom values (when no country is selected)
 const DEFAULT_BLOOM = {
-  intensity: 0.2,
+  intensity: 0.1,
   luminanceThreshold: 0.3,
   luminanceSmoothing: 1.5,
   mipmapBlur: true,
@@ -16,7 +16,7 @@ const DEFAULT_BLOOM = {
 
 // Selected state bloom values (when a country is selected)
 const SELECTED_BLOOM = {
-  intensity: 1.0,
+  intensity: 0.5,
   luminanceThreshold: 0.3,
   luminanceSmoothing: 1.5,
   mipmapBlur: true,
@@ -76,8 +76,8 @@ export default function GlobeScene({ selectedCountry }) {
         className="w-full h-full"
         style={{ background: COLORS.DARK_STATE }}
       >
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[50, 5, 5]} intensity={4.5} />
+        <ambientLight intensity={1} />
+        <directionalLight position={[50, 5, -35]} intensity={3.2} />
         <Globe selectedCountry={selectedCountry} />
         <BloomEffect selectedCountry={selectedCountry} />
       </Canvas>
