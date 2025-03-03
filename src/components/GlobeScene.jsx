@@ -4,6 +4,8 @@ import { COLORS } from "../constants/colors";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Default bloom values (when no country is selected)
 const DEFAULT_BLOOM = {
@@ -69,6 +71,19 @@ function BloomEffect({ selectedCountry }) {
  * GlobeScene component that renders the 3D globe within a Canvas
  */
 export default function GlobeScene({ selectedCountry }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Load the model
+    const loader = new GLTFLoader();
+    loader.load(
+      '/globe.glb',
+      () => setIsLoading(false),
+      undefined,
+      (error) => console.error('Error loading globe:', error)
+    );
+  }, []);
+
   return (
     <div className="relative w-full h-full" style={{ backgroundColor: COLORS.DARK_STATE }}>
       <Canvas 
@@ -81,6 +96,18 @@ export default function GlobeScene({ selectedCountry }) {
         <Globe selectedCountry={selectedCountry} />
         <BloomEffect selectedCountry={selectedCountry} />
       </Canvas>
+      
+      {/* Loading text */}
+      {isLoading && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-50">
+          <p 
+            className="text-2xl italic animate-pulse"
+            style={{ color: COLORS.SELECTED_TEXT }}
+          >
+            loading 3D objects...
+          </p>
+        </div>
+      )}
       
       {/* Fade overlays */}
       <div 

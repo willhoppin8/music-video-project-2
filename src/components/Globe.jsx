@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useFrame, useThree, useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { COLORS } from "../constants/colors";
 import useGlobeRotation from "../hooks/useGlobeRotation";
@@ -10,7 +10,8 @@ import { countries } from "../data/countries";
  * Globe component that renders a 3D model and highlights the selected country
  */
 export default function Globe({ selectedCountry }) {
-  const { scene, nodes } = useGLTF("/globe.glb");
+  const gltf = useLoader(GLTFLoader, "/globe.glb");
+  const { scene, nodes } = gltf;
   const originalMaterials = useRef({});
   const globeRef = useRef();
   const { camera } = useThree();
@@ -24,7 +25,7 @@ export default function Globe({ selectedCountry }) {
         originalMaterials.current[mesh.name] = mesh.material.clone();
       }
     });
-  }, []);
+  }, [nodes]);
 
   // Create materials for highlighting
   const highlightMaterial = new THREE.MeshStandardMaterial({
