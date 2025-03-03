@@ -7,7 +7,7 @@ import { useFrame } from "@react-three/fiber";
 
 // Default bloom values (when no country is selected)
 const DEFAULT_BLOOM = {
-  intensity: 0.1,
+  intensity: 1,
   luminanceThreshold: 0.3,
   luminanceSmoothing: 1.5,
   mipmapBlur: true,
@@ -16,7 +16,7 @@ const DEFAULT_BLOOM = {
 
 // Selected state bloom values (when a country is selected)
 const SELECTED_BLOOM = {
-  intensity: 0.5,
+  intensity: 1,
   luminanceThreshold: 0.3,
   luminanceSmoothing: 1.5,
   mipmapBlur: true,
