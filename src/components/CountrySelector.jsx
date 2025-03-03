@@ -25,20 +25,20 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
     const screenWidth = window.innerWidth;
     
     // Determine max length based on screen size
-    // Reduced lengths to account for ellipsis width and padding
+    // More aggressive truncation to prevent overflow
     let maxLength;
     if (screenWidth <= 375) { // iPhone SE and similar
-      maxLength = 10;
+      maxLength = 8;
     } else if (screenWidth <= 480) { // Most mobile phones
-      maxLength = 13;
+      maxLength = 11;
     } else if (screenWidth <= 768) { // Tablets and larger phones
-      maxLength = 16;
+      maxLength = 14;
     } else {
-      maxLength = 20; // Desktop
+      maxLength = 18; // Desktop
     }
     
     // If name is longer than maxLength, truncate it
-    // Subtract 2 more characters to ensure ellipsis fits nicely
+    // Subtract 3 more characters to ensure ellipsis fits nicely
     if (formattedName.length > maxLength) {
       return formattedName.substring(0, maxLength - 2) + '...';
     }
@@ -188,7 +188,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className={`h-px ${showLetterMenu ? 'w-48 mt-[3px] mb-2' : 'w-32 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
+                    <div className={`h-px ${showLetterMenu ? 'w-44 mt-[3px] mb-2' : 'w-32 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
@@ -213,7 +213,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                         } : 
                         { textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' }
                       }
-                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg pr-2
+                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg pr-4 max-w-[180px] sm:max-w-[200px]
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
