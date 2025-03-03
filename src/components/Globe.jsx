@@ -124,38 +124,52 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     // Update pointer position one final time before raycasting
     const canvas = event.currentTarget;
     const rect = canvas.getBoundingClientRect();
+    const pixelRatio = window.devicePixelRatio || 1;
     
     // Handle touch events differently
     let x, y;
     if (event.touches && event.touches[0]) {
-      // For touch events
-      x = event.touches[0].clientX - rect.left;
-      y = event.touches[0].clientY - rect.top;
+      // For touch events, use clientX/Y directly and account for canvas scaling
+      const touch = event.touches[0];
+      const scaleX = canvas.width / (rect.width * pixelRatio);
+      const scaleY = canvas.height / (rect.height * pixelRatio);
       
-      // Apply a touch offset correction (touches tend to be registered lower than intended)
-      y -= 20; // Adjust this value as needed
+      x = (touch.clientX - rect.left) * scaleX;
+      y = (touch.clientY - rect.top) * scaleY;
+      
+      console.log("Touch event details:", {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        rectLeft: rect.left,
+        rectTop: rect.top,
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+        rectWidth: rect.width,
+        rectHeight: rect.height,
+        pixelRatio,
+        scaleX,
+        scaleY,
+        finalX: x,
+        finalY: y
+      });
     } else {
       // For mouse events
-      x = event.clientX - rect.left;
-      y = event.clientY - rect.top;
+      x = (event.clientX - rect.left) * (canvas.width / (rect.width * pixelRatio));
+      y = (event.clientY - rect.top) * (canvas.height / (rect.height * pixelRatio));
     }
     
-    // Account for device pixel ratio and any CSS scaling
-    const pixelRatio = window.devicePixelRatio || 1;
-    const canvasWidth = canvas.width / pixelRatio;
-    const canvasHeight = canvas.height / pixelRatio;
-    
-    pointer.current.x = (x / canvasWidth) * 2 - 1;
-    pointer.current.y = -(y / canvasHeight) * 2 + 1;
+    // Convert to normalized device coordinates (-1 to +1)
+    pointer.current.x = (x / canvas.width) * 2 - 1;
+    pointer.current.y = -(y / canvas.height) * 2 + 1;
 
-    console.log("Globe clicked", { 
-      x: pointer.current.x, 
+    console.log("Normalized coordinates:", {
+      x: pointer.current.x,
       y: pointer.current.y,
       isTouchEvent: !!(event.touches && event.touches[0])
-    }); // Debug log
+    });
 
     if (!gltf || !onCountrySelect) {
-      console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
+      console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect });
       return;
     }
 
