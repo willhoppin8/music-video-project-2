@@ -11,19 +11,18 @@ import CountryModal from "./components/CountryModal";
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hasManuallyClosed, setHasManuallyClosed] = useState(false);
+  const [modalPreference, setModalPreference] = useState(true); // true = auto-open, false = keep closed
 
   const handleCountrySelect = (country) => {
     // If clicking the same country, unfocus it
     if (selectedCountry === country) {
       setSelectedCountry(null);
       setIsModalOpen(false);
-      setHasManuallyClosed(false);
     } else {
       // If clicking a different country, select it
       setSelectedCountry(country);
-      // Only open modal if it hasn't been manually closed
-      if (!hasManuallyClosed) {
+      // Only open modal if user preference is to show it
+      if (modalPreference) {
         setIsModalOpen(true);
       }
     }
@@ -32,12 +31,8 @@ function App() {
   const toggleModal = () => {
     const newIsOpen = !isModalOpen;
     setIsModalOpen(newIsOpen);
-    // Track if user manually closes the modal
-    if (!newIsOpen) {
-      setHasManuallyClosed(true);
-    } else {
-      setHasManuallyClosed(false);
-    }
+    // Update modal preference when user manually toggles
+    setModalPreference(newIsOpen);
   };
 
   return (

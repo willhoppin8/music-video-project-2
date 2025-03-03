@@ -106,7 +106,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   // Handle click events
   const handleClick = (event) => {
     // If we were just dragging or there's still a pointer down, ignore the click
-    if (isDragging.current || pointerDown.current) {
+    if (isDragging.current || pointerDown.current || isMobile.current) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -158,6 +158,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle wheel events for desktop zoom
   const handleWheel = (event) => {
+    if (isMobile.current) return;
+    
     event.preventDefault();
     event.stopPropagation();
     
@@ -168,6 +170,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle touch events for mobile pinch zoom
   const handleTouchMove = (event) => {
+    if (isMobile.current) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
@@ -193,6 +197,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   };
 
   const handleTouchStart = (event) => {
+    if (isMobile.current) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
