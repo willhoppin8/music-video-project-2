@@ -18,7 +18,11 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
 
   // Helper function to format country name for display (replace underscores with spaces)
   const formatCountryName = (name) => {
-    return name.replace(/_/g, ' ');
+    const formattedName = name.replace(/_/g, ' ');
+    const maxLength = "United States".length; // 13 characters
+    return formattedName.length > maxLength 
+      ? formattedName.slice(0, maxLength - 3) + '...'
+      : formattedName;
   };
 
   // Sort and group countries by first letter (ignoring 'The_' prefix)
@@ -124,7 +128,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   };
 
   return (
-    <div className="fixed inset-0 z-10 overflow-hidden country-selector-root">
+    <div className="fixed left-0 top-0 bottom-0 w-[300px] z-10 overflow-hidden country-selector-root">
       {/* Alphabet Navigation */}
       {showLetterMenu && (
         <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">

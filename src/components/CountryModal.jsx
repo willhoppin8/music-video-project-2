@@ -24,7 +24,7 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
               <IoClose size={26} className="sm:w-8 sm:h-8" />
             </button>
             <h2 
-              className="text-[16px] sm:text-[22px] font-bold px-6 sm:px-8 py-6 break-words hyphens-auto pr-[65px]" 
+              className="text-[16px] sm:text-[22px] font-bold px-6 sm:px-8 py-6 break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)]" 
               style={{ color: COLORS.SELECTED_TEXT }}
               lang="en"
             >
