@@ -87,9 +87,18 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     }
 
     // Calculate pointer position in normalized device coordinates (-1 to +1)
-    const rect = event.currentTarget.getBoundingClientRect();
-    pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    const canvas = event.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    // Account for device pixel ratio and any CSS scaling
+    const pixelRatio = window.devicePixelRatio || 1;
+    const canvasWidth = canvas.width / pixelRatio;
+    const canvasHeight = canvas.height / pixelRatio;
+    
+    pointer.current.x = (x / canvasWidth) * 2 - 1;
+    pointer.current.y = -(y / canvasHeight) * 2 + 1;
   };
 
   // Handle pointer up to reset drag state
@@ -106,13 +115,27 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   // Handle click events
   const handleClick = (event) => {
     // If we were just dragging or there's still a pointer down, ignore the click
-    if (isDragging.current || pointerDown.current || isMobile.current) {
+    if (isDragging.current || pointerDown.current) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
 
-    console.log("Globe clicked"); // Debug log
+    // Update pointer position one final time before raycasting
+    const canvas = event.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    // Account for device pixel ratio and any CSS scaling
+    const pixelRatio = window.devicePixelRatio || 1;
+    const canvasWidth = canvas.width / pixelRatio;
+    const canvasHeight = canvas.height / pixelRatio;
+    
+    pointer.current.x = (x / canvasWidth) * 2 - 1;
+    pointer.current.y = -(y / canvasHeight) * 2 + 1;
+
+    console.log("Globe clicked", { x: pointer.current.x, y: pointer.current.y }); // Debug log
     if (!gltf || !onCountrySelect) {
       console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
       return;
@@ -220,10 +243,18 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
     // Handle canvas-specific pointer move for raycasting
     const handleCanvasPointerMove = (event) => {
-      // Calculate pointer position in normalized device coordinates (-1 to +1)
-      const rect = event.currentTarget.getBoundingClientRect();
-      pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      const canvas = event.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      // Account for device pixel ratio and any CSS scaling
+      const pixelRatio = window.devicePixelRatio || 1;
+      const canvasWidth = canvas.width / pixelRatio;
+      const canvasHeight = canvas.height / pixelRatio;
+      
+      pointer.current.x = (x / canvasWidth) * 2 - 1;
+      pointer.current.y = -(y / canvasHeight) * 2 + 1;
     };
 
     // Handle global pointer events (for when pointer moves outside canvas)
