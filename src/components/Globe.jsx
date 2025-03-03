@@ -182,6 +182,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle touch events for mobile pinch zoom
   const handleTouchMove = (event) => {
+    if (isMobile.current) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
@@ -203,68 +205,21 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       }
 
       lastPinchDistance.current = distance;
-    } else if (event.touches.length === 1 && pointerDown.current) {
-      // Handle single touch drag
-      const touch = event.touches[0];
-      const dx = touch.clientX - pointerDown.current.x;
-      const dy = touch.clientY - pointerDown.current.y;
-      
-      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-        isDragging.current = true;
-        
-        // Convert pixel movement to rotation (scale down the movement)
-        const rotationScale = 0.005;
-        const deltaRotationY = dx * rotationScale;
-        const deltaRotationX = dy * rotationScale;
-        
-        // Update the rotation
-        manualRotate(deltaRotationX, deltaRotationY);
-        
-        // Update pointer position for next frame
-        pointerDown.current = { x: touch.clientX, y: touch.clientY };
-      }
     }
   };
 
   const handleTouchStart = (event) => {
+    if (isMobile.current) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
       event.stopPropagation();
-    } else if (event.touches.length === 1) {
-      // Store the initial touch position
-      const touch = event.touches[0];
-      pointerDown.current = { x: touch.clientX, y: touch.clientY };
-      isDragging.current = false;
-
-      // Update pointer position for raycasting
-      const rect = event.currentTarget.getBoundingClientRect();
-      pointer.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
     }
   };
 
-  const handleTouchEnd = (event) => {
-    event.preventDefault(); // Prevent any default handling
-    
-    // Only handle tap if we weren't dragging
-    if (!isDragging.current && pointerDown.current) {
-      // Use the stored pointer position from touchstart for better accuracy
-      handleClick({
-        touches: [{ 
-          clientX: pointerDown.current.x, 
-          clientY: pointerDown.current.y 
-        }],
-        currentTarget: event.currentTarget,
-        preventDefault: () => {},
-        stopPropagation: () => {}
-      });
-    }
-    
-    // Reset states
+  const handleTouchEnd = () => {
     lastPinchDistance.current = null;
-    isDragging.current = false;
-    pointerDown.current = null;
   };
 
   // Add event listeners
@@ -277,19 +232,17 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
     // Handle canvas-specific pointer move for raycasting
     const handleCanvasPointerMove = (event) => {
-      // Only handle mouse events here, touch events are handled separately
-      if (event.pointerType === 'touch') return;
-      
+      // Calculate pointer position in normalized device coordinates (-1 to +1)
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
       const rect = event.currentTarget.getBoundingClientRect();
-      pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      pointer.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
     };
 
     // Handle global pointer events (for when pointer moves outside canvas)
     const handleGlobalPointerMove = (event) => {
-      // Only handle mouse events here, touch events are handled separately
-      if (event.pointerType === 'touch') return;
-      
       if (!pointerDown.current) return;
       
       const dx = event.clientX - pointerDown.current.x;
@@ -311,11 +264,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       }
     };
 
-    // Handle global pointer up events
     const handleGlobalPointerUp = (event) => {
-      // Only handle mouse events here, touch events are handled separately
-      if (event.pointerType === 'touch') return;
-
       if (isDragging.current) {
         // Prevent the click event from firing after a drag
         event.preventDefault();
@@ -324,58 +273,49 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
         // Signal the end of dragging to resume auto-rotation
         manualRotate(0, 0, true);
         
-        // Add a one-time click blocker that will prevent the next click
+        // Set a flag to prevent the next click
         const clickBlocker = (e) => {
-          e.preventDefault();
           e.stopPropagation();
           window.removeEventListener('click', clickBlocker, true);
         };
         window.addEventListener('click', clickBlocker, true);
       }
-      
       isDragging.current = false;
       pointerDown.current = null;
     };
 
-    // Create a click handler function that we can reference in both add and remove
-    const handleClickWithCheck = (e) => {
-      if (e.pointerType !== 'touch' && !isDragging.current) {
-        handleClick(e);
-      }
-    };
-
-    // Add event listeners with proper options
-    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
-    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
-    canvas.addEventListener("touchend", handleTouchEnd, { passive: false });
-    canvas.addEventListener("touchcancel", handleTouchEnd, { passive: false });
-
-    // Mouse-specific event listeners
+    // Add canvas-specific event listeners
     canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("pointermove", handleCanvasPointerMove);
-    canvas.addEventListener("click", handleClickWithCheck);
+    canvas.addEventListener("click", handleClick);
 
     // Add global event listeners
     window.addEventListener("pointermove", handleGlobalPointerMove);
     window.addEventListener("pointerup", handleGlobalPointerUp);
 
-    // Add wheel event listener
+    // Add zoom event listeners
     canvas.addEventListener("wheel", handleWheel, { passive: false });
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", handleTouchEnd);
+    canvas.addEventListener("touchcancel", handleTouchEnd);
 
     return () => {
+      // Remove canvas-specific event listeners
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+      canvas.removeEventListener("pointermove", handleCanvasPointerMove);
+      canvas.removeEventListener("click", handleClick);
+
+      // Remove global event listeners
+      window.removeEventListener("pointermove", handleGlobalPointerMove);
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
+
+      // Remove zoom event listeners
+      canvas.removeEventListener("wheel", handleWheel);
       canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("touchmove", handleTouchMove);
       canvas.removeEventListener("touchend", handleTouchEnd);
       canvas.removeEventListener("touchcancel", handleTouchEnd);
-      
-      canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointermove", handleCanvasPointerMove);
-      canvas.removeEventListener("click", handleClickWithCheck);
-      
-      window.removeEventListener("pointermove", handleGlobalPointerMove);
-      window.removeEventListener("pointerup", handleGlobalPointerUp);
-      
-      canvas.removeEventListener("wheel", handleWheel);
     };
   }, [camera, onCountrySelect]);
 
