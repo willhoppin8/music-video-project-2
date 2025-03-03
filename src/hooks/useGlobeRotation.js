@@ -16,6 +16,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
   const targetRotation = useRef({ x: 0, y: 0 });
   const currentRotation = useRef({ x: 0, y: 0 });
   const targetZoom = useRef(DEFAULT_ZOOM);
+  const currentZoom = useRef(DEFAULT_ZOOM);
   const customAxis = new THREE.Vector3(1, 0, -0.8).normalize();
   const previousCountry = useRef(null);
   const transitionSpeed = useRef(MIN_TRANSITION_SPEED);
@@ -65,6 +66,18 @@ export default function useGlobeRotation(selectedCountry, camera) {
       currentRotation.current.x += deltaX;
       currentRotation.current.y += deltaY;
     }
+  };
+
+  // Add manual zoom handler
+  const manualZoom = (deltaZoom) => {
+    if (selectedCountry) return; // Don't allow manual zoom when a country is selected
+    
+    const MIN_ZOOM = 1.0;
+    const MAX_ZOOM = 2.5;
+    
+    // Update current zoom with constraints
+    currentZoom.current = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, currentZoom.current + deltaZoom));
+    targetZoom.current = currentZoom.current;
   };
 
   useEffect(() => {
@@ -147,9 +160,9 @@ export default function useGlobeRotation(selectedCountry, camera) {
         currentRotation.current.y += (Math.PI * 2 * delta) / (60 * 3);
       }
       
-      // Direct lerp to default zoom when no country is selected
+      // Update camera distance based on current zoom
       const currentDistance = camera.position.length();
-      const targetDistance = DEFAULT_CAMERA_DISTANCE * DEFAULT_ZOOM;
+      const targetDistance = DEFAULT_CAMERA_DISTANCE * currentZoom.current;
       const newDistance = THREE.MathUtils.lerp(
         currentDistance,
         targetDistance,
@@ -200,5 +213,5 @@ export default function useGlobeRotation(selectedCountry, camera) {
     camera.position.normalize().multiplyScalar(newDistance);
   };
 
-  return { updateRotation, manualRotate };
+  return { updateRotation, manualRotate, manualZoom };
 } 

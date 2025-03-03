@@ -20,7 +20,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const pointerDown = useRef(null);
   const isDragging = useRef(false);
   const isMobile = useRef(false);
-  const { updateRotation, manualRotate } = useGlobeRotation(selectedCountry, camera);
+  const lastPinchDistance = useRef(null);
+  const { updateRotation, manualRotate, manualZoom } = useGlobeRotation(selectedCountry, camera);
   const transitionSpeed = 0.1; // Speed of color transition
 
   // Check if device is mobile
@@ -155,6 +156,54 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     }
   };
 
+  // Handle wheel events for desktop zoom
+  const handleWheel = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Convert wheel delta to zoom delta (normalize it a bit)
+    const zoomDelta = event.deltaY * 0.0005;
+    manualZoom(zoomDelta);
+  };
+
+  // Handle touch events for mobile pinch zoom
+  const handleTouchMove = (event) => {
+    if (event.touches.length === 2) {
+      // Prevent default browser pinch-zoom
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Calculate the distance between the two touch points
+      const touch1 = event.touches[0];
+      const touch2 = event.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+
+      if (lastPinchDistance.current !== null) {
+        const delta = distance - lastPinchDistance.current;
+        // Convert pinch delta to zoom delta (increase sensitivity)
+        const zoomDelta = delta * 0.005;
+        manualZoom(zoomDelta);
+      }
+
+      lastPinchDistance.current = distance;
+    }
+  };
+
+  const handleTouchStart = (event) => {
+    if (event.touches.length === 2) {
+      // Prevent default browser pinch-zoom
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    lastPinchDistance.current = null;
+  };
+
   // Add event listeners
   useEffect(() => {
     const canvas = document.querySelector('canvas');
@@ -223,6 +272,13 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     window.addEventListener("pointermove", handleGlobalPointerMove);
     window.addEventListener("pointerup", handleGlobalPointerUp);
 
+    // Add zoom event listeners
+    canvas.addEventListener("wheel", handleWheel, { passive: false });
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", handleTouchEnd);
+    canvas.addEventListener("touchcancel", handleTouchEnd);
+
     return () => {
       // Remove canvas-specific event listeners
       canvas.removeEventListener("pointerdown", handlePointerDown);
@@ -232,6 +288,13 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       // Remove global event listeners
       window.removeEventListener("pointermove", handleGlobalPointerMove);
       window.removeEventListener("pointerup", handleGlobalPointerUp);
+
+      // Remove zoom event listeners
+      canvas.removeEventListener("wheel", handleWheel);
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchend", handleTouchEnd);
+      canvas.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, [camera, onCountrySelect]);
 
