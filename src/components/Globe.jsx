@@ -106,12 +106,21 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   // Handle click events
   const handleClick = (event) => {
     // If we were just dragging or there's still a pointer down, ignore the click
-    if (isDragging.current || pointerDown.current || isMobile.current) {
+    if (isDragging.current || pointerDown.current) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
 
+    // On mobile, just handle deselection if a country is selected, otherwise do nothing
+    if (isMobile.current) {
+      if (selectedCountry) {
+        onCountrySelect(null);
+      }
+      return;
+    }
+
+    // For non-mobile, proceed with normal selection logic
     console.log("Globe clicked"); // Debug log
     if (!gltf || !onCountrySelect) {
       console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
