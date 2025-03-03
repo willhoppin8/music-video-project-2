@@ -14,11 +14,13 @@ const MOBILE_SCREEN_THRESHOLD = 768; // Threshold for mobile screens in pixels
  */
 export default function useGlobeRotation(selectedCountry, camera) {
   const targetRotation = useRef({ x: 0, y: 0 });
+  const currentRotation = useRef({ x: 0, y: 0 });
   const targetZoom = useRef(DEFAULT_ZOOM);
   const customAxis = new THREE.Vector3(1, 0, -0.8).normalize();
   const previousCountry = useRef(null);
   const transitionSpeed = useRef(MIN_TRANSITION_SPEED);
   const isMobile = useRef(window.innerWidth <= MOBILE_SCREEN_THRESHOLD);
+  const isDragging = useRef(false);
 
   // Update isMobile on window resize
   useEffect(() => {
@@ -51,6 +53,15 @@ export default function useGlobeRotation(selectedCountry, camera) {
   const transitionProgress = useRef(0);
   const maxZoomOutFactor = useRef(1);
   const startZoom = useRef(DEFAULT_ZOOM);
+
+  // Add manual rotation handler
+  const manualRotate = (deltaX, deltaY) => {
+    if (selectedCountry) return; // Don't allow manual rotation when a country is selected
+    
+    isDragging.current = true;
+    currentRotation.current.x += deltaX;
+    currentRotation.current.y += deltaY;
+  };
 
   useEffect(() => {
     if (selectedCountry) {
@@ -90,6 +101,8 @@ export default function useGlobeRotation(selectedCountry, camera) {
         previousCountry.current = selectedCountry;
       }
     } else {
+      // When deselecting, keep the current rotation as target
+      targetRotation.current = { ...currentRotation.current };
       startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
       targetZoom.current = DEFAULT_ZOOM;
       previousCountry.current = null;
@@ -103,8 +116,24 @@ export default function useGlobeRotation(selectedCountry, camera) {
     if (!globeRef.current) return;
 
     if (!selectedCountry) {
-      // Auto-rotate when no country is selected
-      globeRef.current.rotation.y += (Math.PI * 2 * delta) / (60 * 3);
+      // Create quaternion for custom axis rotation from current X rotation
+      const xQuat = new THREE.Quaternion();
+      xQuat.setFromAxisAngle(customAxis, currentRotation.current.x);
+      
+      // Create quaternion for y-rotation from current Y rotation
+      const yQuat = new THREE.Quaternion();
+      yQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), currentRotation.current.y);
+      
+      // Combine the rotations
+      const targetQuat = xQuat.multiply(yQuat);
+      
+      // Apply the rotation
+      globeRef.current.quaternion.copy(targetQuat);
+      
+      // Add auto-rotation to Y axis only when not dragging
+      if (!isDragging.current) {
+        currentRotation.current.y += (Math.PI * 2 * delta) / (60 * 3);
+      }
       
       // Direct lerp to default zoom when no country is selected
       const currentDistance = camera.position.length();
@@ -117,6 +146,9 @@ export default function useGlobeRotation(selectedCountry, camera) {
       camera.position.normalize().multiplyScalar(newDistance);
       return;
     }
+
+    // Reset drag state when selecting a country
+    isDragging.current = false;
 
     // Update transition progress
     transitionProgress.current = Math.min(1, transitionProgress.current + transitionSpeed.current);
@@ -156,5 +188,5 @@ export default function useGlobeRotation(selectedCountry, camera) {
     camera.position.normalize().multiplyScalar(newDistance);
   };
 
-  return { updateRotation };
+  return { updateRotation, manualRotate };
 } 

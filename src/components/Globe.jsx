@@ -20,7 +20,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const pointerDown = useRef(null);
   const isDragging = useRef(false);
   const isMobile = useRef(false);
-  const { updateRotation } = useGlobeRotation(selectedCountry, camera);
+  const { updateRotation, manualRotate } = useGlobeRotation(selectedCountry, camera);
   const transitionSpeed = 0.1; // Speed of color transition
 
   // Check if device is mobile
@@ -52,6 +52,15 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     isDragging.current = false;
   };
 
+  // Handle pointer leave/out to reset states
+  const handlePointerLeave = () => {
+    if (isDragging.current) {
+      // Keep the last known position to prevent sudden rotation on re-entry
+      isDragging.current = false;
+    }
+    pointerDown.current = null;
+  };
+
   // Handle pointer move for raycasting and drag detection
   const handlePointerMove = (event) => {
     if (isMobile.current) return;
@@ -59,11 +68,22 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     // Check for drag if pointer is down
     if (pointerDown.current) {
       const dragThreshold = 5; // pixels
-      const dx = Math.abs(event.clientX - pointerDown.current.x);
-      const dy = Math.abs(event.clientY - pointerDown.current.y);
+      const dx = event.clientX - pointerDown.current.x;
+      const dy = event.clientY - pointerDown.current.y;
       
-      if (dx > dragThreshold || dy > dragThreshold) {
+      if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
         isDragging.current = true;
+        
+        // Convert pixel movement to rotation (scale down the movement)
+        const rotationScale = 0.005;
+        const deltaRotationY = dx * rotationScale;
+        const deltaRotationX = dy * rotationScale;
+        
+        // Update the rotation
+        manualRotate(deltaRotationX, deltaRotationY);
+        
+        // Update pointer position for next frame
+        pointerDown.current = { x: event.clientX, y: event.clientY };
       }
     }
 
@@ -74,14 +94,22 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   };
 
   // Handle pointer up to reset drag state
-  const handlePointerUp = () => {
+  const handlePointerUp = (event) => {
+    // If we were dragging, prevent the next click event from firing
+    if (isDragging.current) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    isDragging.current = false;
     pointerDown.current = null;
   };
 
   // Handle click events
   const handleClick = (event) => {
-    if (isMobile.current || isDragging.current) {
-      isDragging.current = false;
+    // If we were just dragging or on mobile, ignore the click
+    if (isMobile.current || isDragging.current || pointerDown.current) {
+      event.preventDefault();
+      event.stopPropagation();
       return;
     }
 
@@ -137,16 +165,74 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
 
+    // Handle canvas-specific pointer move for raycasting
+    const handleCanvasPointerMove = (event) => {
+      if (isMobile.current) return;
+      
+      // Calculate pointer position in normalized device coordinates (-1 to +1)
+      const rect = event.currentTarget.getBoundingClientRect();
+      pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+
+    // Handle global pointer events (for when pointer moves outside canvas)
+    const handleGlobalPointerMove = (event) => {
+      if (!pointerDown.current) return;
+      
+      const dx = event.clientX - pointerDown.current.x;
+      const dy = event.clientY - pointerDown.current.y;
+      
+      if (isDragging.current) {
+        // Convert pixel movement to rotation (scale down the movement)
+        const rotationScale = 0.005;
+        const deltaRotationY = dx * rotationScale;
+        const deltaRotationX = dy * rotationScale;
+        
+        // Update the rotation
+        manualRotate(deltaRotationX, deltaRotationY);
+        
+        // Update pointer position for next frame
+        pointerDown.current = { x: event.clientX, y: event.clientY };
+      } else if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        isDragging.current = true;
+      }
+    };
+
+    const handleGlobalPointerUp = (event) => {
+      if (isDragging.current) {
+        // Prevent the click event from firing after a drag
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Set a flag to prevent the next click
+        const clickBlocker = (e) => {
+          e.stopPropagation();
+          window.removeEventListener('click', clickBlocker, true);
+        };
+        window.addEventListener('click', clickBlocker, true);
+      }
+      isDragging.current = false;
+      pointerDown.current = null;
+    };
+
+    // Add canvas-specific event listeners
     canvas.addEventListener("pointerdown", handlePointerDown);
-    canvas.addEventListener("pointermove", handlePointerMove);
-    canvas.addEventListener("pointerup", handlePointerUp);
+    canvas.addEventListener("pointermove", handleCanvasPointerMove);
     canvas.addEventListener("click", handleClick);
 
+    // Add global event listeners
+    window.addEventListener("pointermove", handleGlobalPointerMove);
+    window.addEventListener("pointerup", handleGlobalPointerUp);
+
     return () => {
+      // Remove canvas-specific event listeners
       canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointermove", handlePointerMove);
-      canvas.removeEventListener("pointerup", handlePointerUp);
+      canvas.removeEventListener("pointermove", handleCanvasPointerMove);
       canvas.removeEventListener("click", handleClick);
+
+      // Remove global event listeners
+      window.removeEventListener("pointermove", handleGlobalPointerMove);
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
     };
   }, [camera, onCountrySelect]);
 
