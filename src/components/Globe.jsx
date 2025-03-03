@@ -17,8 +17,23 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const globeRef = useRef();
   const raycaster = useRef(new THREE.Raycaster());
   const pointer = useRef(new THREE.Vector2());
+  const pointerDown = useRef(null);
+  const isDragging = useRef(false);
+  const isMobile = useRef(false);
   const { updateRotation } = useGlobeRotation(selectedCountry, camera);
   const transitionSpeed = 0.1; // Speed of color transition
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth <= 768;
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Store original materials on first render
   useEffect(() => {
@@ -31,16 +46,45 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     });
   }, [gltf]);
 
-  // Handle pointer move for raycasting
+  // Handle pointer down for drag detection
+  const handlePointerDown = (event) => {
+    pointerDown.current = { x: event.clientX, y: event.clientY };
+    isDragging.current = false;
+  };
+
+  // Handle pointer move for raycasting and drag detection
   const handlePointerMove = (event) => {
+    if (isMobile.current) return;
+    
+    // Check for drag if pointer is down
+    if (pointerDown.current) {
+      const dragThreshold = 5; // pixels
+      const dx = Math.abs(event.clientX - pointerDown.current.x);
+      const dy = Math.abs(event.clientY - pointerDown.current.y);
+      
+      if (dx > dragThreshold || dy > dragThreshold) {
+        isDragging.current = true;
+      }
+    }
+
     // Calculate pointer position in normalized device coordinates (-1 to +1)
     const rect = event.currentTarget.getBoundingClientRect();
     pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   };
 
+  // Handle pointer up to reset drag state
+  const handlePointerUp = () => {
+    pointerDown.current = null;
+  };
+
   // Handle click events
   const handleClick = (event) => {
+    if (isMobile.current || isDragging.current) {
+      isDragging.current = false;
+      return;
+    }
+
     console.log("Globe clicked"); // Debug log
     if (!gltf || !onCountrySelect) {
       console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
@@ -93,11 +137,15 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
 
+    canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("pointermove", handlePointerMove);
+    canvas.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("click", handleClick);
 
     return () => {
+      canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("click", handleClick);
     };
   }, [camera, onCountrySelect]);
