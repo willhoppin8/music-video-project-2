@@ -61,7 +61,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
         
         const newRotation = {
           x: country.rotationX,
-          y: country.rotationY + (isMobile.current ? 0.12 : 0) // Add 0.12 to rotationY on mobile
+          y: country.rotationY + (isMobile.current ? 0.05 : 0) // Add 0.05 to rotationY on mobile
         };
 
         // Reset transition progress
@@ -72,7 +72,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
           if (prevCountry) {
             const prevRotation = {
               x: prevCountry.rotationX,
-              y: prevCountry.rotationY + (isMobile.current ? 0.12 : 0) // Add 0.12 to rotationY on mobile
+              y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0) // Add 0.05 to rotationY on mobile
             };
             
             const distance = calculateDistance(newRotation, prevRotation);
