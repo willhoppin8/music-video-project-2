@@ -149,7 +149,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   };
 
   return (
-    <div className="fixed left-0 top-0 bottom-0 w-[220px] z-10 overflow-hidden country-selector-root">
+    <div className="fixed left-0 top-0 bottom-0 w-[200px] z-10 overflow-hidden country-selector-root">
       {/* Alphabet Navigation */}
       {showLetterMenu && (
         <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
@@ -188,7 +188,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className={`h-px ${showLetterMenu ? 'w-44 mt-[3px] mb-2' : 'w-32 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
+                    <div className={`h-px ${showLetterMenu ? 'w-40 mt-[3px] mb-2' : 'w-32 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
@@ -213,7 +213,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                         } : 
                         { textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' }
                       }
-                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg pr-4 max-w-[180px] sm:max-w-[200px]
+                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg pr-2 max-w-[150px] sm:max-w-[170px]
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
