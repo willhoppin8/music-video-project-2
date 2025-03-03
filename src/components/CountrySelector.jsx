@@ -25,20 +25,22 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
     const screenWidth = window.innerWidth;
     
     // Determine max length based on screen size
+    // Reduced lengths to account for ellipsis width and padding
     let maxLength;
     if (screenWidth <= 375) { // iPhone SE and similar
-      maxLength = 12;
+      maxLength = 10;
     } else if (screenWidth <= 480) { // Most mobile phones
-      maxLength = 15;
+      maxLength = 13;
     } else if (screenWidth <= 768) { // Tablets and larger phones
-      maxLength = 18;
+      maxLength = 16;
     } else {
-      maxLength = 24; // Desktop
+      maxLength = 20; // Desktop
     }
     
     // If name is longer than maxLength, truncate it
+    // Subtract 2 more characters to ensure ellipsis fits nicely
     if (formattedName.length > maxLength) {
-      return formattedName.substring(0, maxLength - 3) + '...';
+      return formattedName.substring(0, maxLength - 2) + '...';
     }
     
     return formattedName;
@@ -211,7 +213,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                         } : 
                         { textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' }
                       }
-                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg max-w-[calc(100%-20px)]
+                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg pr-2
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
