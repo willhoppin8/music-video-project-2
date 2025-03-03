@@ -204,6 +204,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
         event.preventDefault();
         event.stopPropagation();
         
+        // Signal the end of dragging to resume auto-rotation
+        manualRotate(0, 0, true);
+        
         // Set a flag to prevent the next click
         const clickBlocker = (e) => {
           e.stopPropagation();

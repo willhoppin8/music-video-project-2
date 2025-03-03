@@ -55,12 +55,16 @@ export default function useGlobeRotation(selectedCountry, camera) {
   const startZoom = useRef(DEFAULT_ZOOM);
 
   // Add manual rotation handler
-  const manualRotate = (deltaX, deltaY) => {
+  const manualRotate = (deltaX, deltaY, isEndingDrag = false) => {
     if (selectedCountry) return; // Don't allow manual rotation when a country is selected
     
-    isDragging.current = true;
-    currentRotation.current.x += deltaX;
-    currentRotation.current.y += deltaY;
+    if (isEndingDrag) {
+      isDragging.current = false;
+    } else {
+      isDragging.current = true;
+      currentRotation.current.x += deltaX;
+      currentRotation.current.y += deltaY;
+    }
   };
 
   useEffect(() => {
@@ -101,8 +105,16 @@ export default function useGlobeRotation(selectedCountry, camera) {
         previousCountry.current = selectedCountry;
       }
     } else {
-      // When deselecting, keep the current rotation as target
-      targetRotation.current = { ...currentRotation.current };
+      // When deselecting, keep the selected country's rotation
+      const prevCountry = countries.find(c => c.name === previousCountry.current);
+      if (prevCountry) {
+        const deselectedRotation = {
+          x: prevCountry.rotationX,
+          y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0)
+        };
+        targetRotation.current = deselectedRotation;
+        currentRotation.current = deselectedRotation; // Sync current rotation with target
+      }
       startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
       targetZoom.current = DEFAULT_ZOOM;
       previousCountry.current = null;
