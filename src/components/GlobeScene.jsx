@@ -77,7 +77,7 @@ export default function GlobeScene({ selectedCountry }) {
         style={{ background: COLORS.DARK_STATE }}
       >
         <ambientLight intensity={1} />
-        <directionalLight position={[50, 5, -35]} intensity={3.2} />
+        <directionalLight position={[50, 5, -35]} intensity={2.8} />
         <Globe selectedCountry={selectedCountry} />
         <BloomEffect selectedCountry={selectedCountry} />
       </Canvas>

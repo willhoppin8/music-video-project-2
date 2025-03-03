@@ -7,6 +7,7 @@ const DEFAULT_CAMERA_DISTANCE = 270;
 const MIN_TRANSITION_SPEED = 0.03; // Double current speed (was 0.02)
 const MAX_TRANSITION_SPEED = 0.09; // Double current speed (was 0.06)
 const RESET_TRANSITION_SPEED = 0.12; // Faster speed for resetting to default state
+const MOBILE_SCREEN_THRESHOLD = 768; // Threshold for mobile screens in pixels
 
 /**
  * Custom hook to handle globe rotation and zoom logic
@@ -17,6 +18,16 @@ export default function useGlobeRotation(selectedCountry, camera) {
   const customAxis = new THREE.Vector3(1, 0, -0.8).normalize();
   const previousCountry = useRef(null);
   const transitionSpeed = useRef(MIN_TRANSITION_SPEED);
+  const isMobile = useRef(window.innerWidth <= MOBILE_SCREEN_THRESHOLD);
+
+  // Update isMobile on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      isMobile.current = window.innerWidth <= MOBILE_SCREEN_THRESHOLD;
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Calculate angular distance between two sets of rotations
   const calculateDistance = (rot1, rot2) => {
@@ -50,7 +61,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
         
         const newRotation = {
           x: country.rotationX,
-          y: country.rotationY
+          y: country.rotationY + (isMobile.current ? 0.12 : 0) // Add 0.12 to rotationY on mobile
         };
 
         // Reset transition progress
@@ -61,7 +72,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
           if (prevCountry) {
             const prevRotation = {
               x: prevCountry.rotationX,
-              y: prevCountry.rotationY
+              y: prevCountry.rotationY + (isMobile.current ? 0.12 : 0) // Add 0.12 to rotationY on mobile
             };
             
             const distance = calculateDistance(newRotation, prevRotation);
