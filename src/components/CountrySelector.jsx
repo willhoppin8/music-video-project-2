@@ -18,11 +18,15 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
 
   // Helper function to format country name for display (replace underscores with spaces)
   const formatCountryName = (name) => {
+    // Replace underscores with spaces
     const formattedName = name.replace(/_/g, ' ');
-    const maxLength = "United States".length; // 13 characters
-    return formattedName.length > maxLength 
-      ? formattedName.slice(0, maxLength - 3) + '...'
-      : formattedName;
+    
+    // If name is longer than 20 characters, truncate it
+    if (formattedName.length > 20) {
+      return formattedName.substring(0, 17) + '...';
+    }
+    
+    return formattedName;
   };
 
   // Sort and group countries by first letter (ignoring 'The_' prefix)
@@ -128,11 +132,11 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
   };
 
   return (
-    <div className="fixed left-0 top-0 bottom-0 w-[300px] z-10 overflow-hidden country-selector-root">
+    <div className="fixed left-0 top-0 bottom-0 w-[220px] z-10 overflow-hidden country-selector-root">
       {/* Alphabet Navigation */}
       {showLetterMenu && (
         <div className="absolute left-4 top-0 bottom-0 w-8 flex items-center">
-          <div className="w-full py-8 flex flex-col items-center">
+          <div className="w-full py-8 flex flex-col items-start">
             {Object.keys(groupedCountries).map((letter) => (
               <button
                 key={letter}
@@ -142,7 +146,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                   fontSize: `${letterSize}px`,
                   height: `${letterSize + 8}px`, // Add 8px for margin
                 }}
-                className={`hover:text-[${COLORS.LIGHT_STATE}] text-[${COLORS.LIGHT_STATE}]/70 cursor-pointer w-6 flex items-center justify-center`}
+                className={`hover:text-[${COLORS.LIGHT_STATE}] text-[${COLORS.LIGHT_STATE}]/70 cursor-pointer w-6 flex items-center`}
               >
                 {letter}
               </button>
@@ -164,20 +168,20 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {index > 0 && (
                   <div className="flex items-center">
                     <span className="w-4 opacity-0 mr-px">▶</span>
-                    <div className={`h-px ${showLetterMenu ? 'w-32 mt-[3px] mb-2' : 'w-20 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
+                    <div className={`h-px ${showLetterMenu ? 'w-48 mt-[3px] mb-2' : 'w-32 mt-[2px] mb-1'}`} style={{ backgroundColor: COLORS.LIGHT_STATE }} />
                   </div>
                 )}
                 {letterCountries.map((country) => (
-                  <div key={country.name} className={`flex items-center ${showLetterMenu ? 'mb-1' : 'mb-0.5'}`}>
+                  <div key={country.name} className="flex items-center mb-[6px]">
                     <span 
                       style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : { opacity: 0 }}
-                      className={`${showLetterMenu ? 'text-sm' : 'text-[10px]'} w-4 mr-px`}
+                      className="text-sm w-4 mr-px flex-shrink-0"
                     >
                       ▶
                     </span>
                     <button
                       style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : undefined}
-                      className={`text-left transition-colors cursor-pointer ${showLetterMenu ? 'text-lg' : 'text-sm'}
+                      className={`text-left transition-colors cursor-pointer truncate text-lg
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
