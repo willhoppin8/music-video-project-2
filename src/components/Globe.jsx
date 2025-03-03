@@ -112,20 +112,23 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
 
-    // On mobile, just handle deselection if a country is selected, otherwise do nothing
-    if (isMobile.current) {
-      if (selectedCountry) {
-        onCountrySelect(null);
-      }
-      return;
-    }
-
-    // For non-mobile, proceed with normal selection logic
     console.log("Globe clicked"); // Debug log
     if (!gltf || !onCountrySelect) {
       console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
       return;
     }
+
+    // Get the correct event coordinates for both touch and mouse events
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    // Get the canvas element and its bounding rect
+    const canvas = event.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+
+    // Calculate normalized device coordinates (-1 to +1) for both touch and mouse
+    pointer.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
 
     // Update raycaster
     raycaster.current.setFromCamera(pointer.current, camera);
@@ -230,9 +233,12 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     // Handle canvas-specific pointer move for raycasting
     const handleCanvasPointerMove = (event) => {
       // Calculate pointer position in normalized device coordinates (-1 to +1)
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
       const rect = event.currentTarget.getBoundingClientRect();
-      pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      pointer.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
     };
 
     // Handle global pointer events (for when pointer moves outside canvas)
