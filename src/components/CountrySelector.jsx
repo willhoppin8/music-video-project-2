@@ -21,9 +21,24 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
     // Replace underscores with spaces
     const formattedName = name.replace(/_/g, ' ');
     
-    // If name is longer than 20 characters, truncate it
-    if (formattedName.length > 20) {
-      return formattedName.substring(0, 17) + '...';
+    // Get screen width
+    const screenWidth = window.innerWidth;
+    
+    // Determine max length based on screen size
+    let maxLength;
+    if (screenWidth <= 375) { // iPhone SE and similar
+      maxLength = 12;
+    } else if (screenWidth <= 480) { // Most mobile phones
+      maxLength = 15;
+    } else if (screenWidth <= 768) { // Tablets and larger phones
+      maxLength = 18;
+    } else {
+      maxLength = 24; // Desktop
+    }
+    
+    // If name is longer than maxLength, truncate it
+    if (formattedName.length > maxLength) {
+      return formattedName.substring(0, maxLength - 3) + '...';
     }
     
     return formattedName;
@@ -196,7 +211,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                         } : 
                         { textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' }
                       }
-                      className={`text-left transition-colors cursor-pointer truncate text-lg
+                      className={`text-left transition-colors cursor-pointer truncate text-base sm:text-lg max-w-[calc(100%-20px)]
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
                     >
