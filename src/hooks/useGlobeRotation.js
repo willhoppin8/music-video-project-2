@@ -128,8 +128,9 @@ export default function useGlobeRotation(selectedCountry, camera) {
         targetRotation.current = deselectedRotation;
         currentRotation.current = deselectedRotation; // Sync current rotation with target
       }
-      startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
+      startZoom.current = DEFAULT_ZOOM; // Always start from default zoom when deselecting
       targetZoom.current = DEFAULT_ZOOM;
+      currentZoom.current = DEFAULT_ZOOM; // Reset current zoom to default as well
       previousCountry.current = null;
       transitionSpeed.current = RESET_TRANSITION_SPEED; // Use faster speed when resetting
       maxZoomOutFactor.current = 1;
