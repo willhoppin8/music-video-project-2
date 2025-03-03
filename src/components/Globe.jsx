@@ -63,8 +63,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer move for raycasting and drag detection
   const handlePointerMove = (event) => {
-    if (isMobile.current) return;
-    
     // Check for drag if pointer is down
     if (pointerDown.current) {
       const dragThreshold = 5; // pixels
@@ -106,8 +104,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle click events
   const handleClick = (event) => {
-    // If we were just dragging or on mobile, ignore the click
-    if (isMobile.current || isDragging.current || pointerDown.current) {
+    // If we were just dragging or there's still a pointer down, ignore the click
+    if (isDragging.current || pointerDown.current) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -167,8 +165,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
     // Handle canvas-specific pointer move for raycasting
     const handleCanvasPointerMove = (event) => {
-      if (isMobile.current) return;
-      
       // Calculate pointer position in normalized device coordinates (-1 to +1)
       const rect = event.currentTarget.getBoundingClientRect();
       pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
