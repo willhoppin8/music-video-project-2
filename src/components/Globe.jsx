@@ -23,6 +23,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const lastPinchDistance = useRef(null);
   const { updateRotation, manualRotate, manualZoom } = useGlobeRotation(selectedCountry, camera);
   const transitionSpeed = 0.1; // Speed of color transition
+  const pointerDownTime = useRef(null);
 
   // Check if device is mobile
   useEffect(() => {
@@ -50,15 +51,13 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   // Handle pointer down for drag detection
   const handlePointerDown = (event) => {
     pointerDown.current = { x: event.clientX, y: event.clientY };
+    pointerDownTime.current = Date.now();
     isDragging.current = false;
   };
 
   // Handle pointer leave/out to reset states
   const handlePointerLeave = () => {
-    if (isDragging.current) {
-      // Keep the last known position to prevent sudden rotation on re-entry
-      isDragging.current = false;
-    }
+    isDragging.current = false;
     pointerDown.current = null;
   };
 
@@ -92,43 +91,34 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   };
 
-  // Handle pointer up to reset drag state
+  // Handle pointer up to reset drag state and handle clicks
   const handlePointerUp = (event) => {
-    // If we were dragging, prevent the next click event from firing
-    if (isDragging.current) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    const wasDragging = isDragging.current;
+    const clickDuration = Date.now() - (pointerDownTime.current || 0);
+    
+    // Reset states
     isDragging.current = false;
     pointerDown.current = null;
-  };
+    pointerDownTime.current = null;
 
-  // Handle click events
-  const handleClick = (event) => {
-    // If we were just dragging or there's still a pointer down, ignore the click
-    if (isDragging.current || pointerDown.current) {
-      event.preventDefault();
-      event.stopPropagation();
+    // If we were dragging or this was a long press, don't trigger selection
+    if (wasDragging || clickDuration > 200) {
+      if (wasDragging) {
+        manualRotate(0, 0, true);
+      }
       return;
     }
 
-    console.log("Globe clicked"); // Debug log
-    if (!gltf || !onCountrySelect) {
-      console.log("Missing gltf or onCountrySelect", { gltf: !!gltf, onCountrySelect: !!onCountrySelect }); // Debug log
-      return;
-    }
-
-    // Get the correct event coordinates for both touch and mouse events
-    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+    // Handle selection (moved from click handler)
+    if (!gltf || !onCountrySelect) return;
 
     // Get the canvas element and its bounding rect
     const canvas = event.currentTarget;
     const rect = canvas.getBoundingClientRect();
 
-    // Calculate normalized device coordinates (-1 to +1) for both touch and mouse
-    pointer.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+    // Calculate normalized device coordinates (-1 to +1)
+    pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     // Update raycaster
     raycaster.current.setFromCamera(pointer.current, camera);
@@ -141,16 +131,12 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       }
     });
 
-    console.log("Found meshes:", meshes.length); // Debug log
-
     // Calculate intersections
     const intersects = raycaster.current.intersectObjects(meshes);
-    console.log("Intersections:", intersects.length); // Debug log
 
     // Handle Ocean clicks differently based on selection state
     if (intersects.length > 0 && intersects[0].object.name === "Ocean") {
       if (selectedCountry) {
-        // If a country is selected, clicking ocean deselects it
         onCountrySelect(null);
       }
       return;
@@ -163,27 +149,24 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
     if (countryIntersection) {
       const countryName = countryIntersection.object.name;
-      console.log("Selected country:", countryName); // Debug log
       onCountrySelect(countryName);
     }
   };
 
   // Handle wheel events for desktop zoom
   const handleWheel = (event) => {
-    if (isMobile.current) return;
-    
-    event.preventDefault();
-    event.stopPropagation();
-    
-    // Convert wheel delta to zoom delta (normalize it a bit)
-    const zoomDelta = event.deltaY * 0.0005;
-    manualZoom(zoomDelta);
+    if (!isMobile.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Convert wheel delta to zoom delta (normalize it a bit)
+      const zoomDelta = event.deltaY * 0.0005;
+      manualZoom(zoomDelta);
+    }
   };
 
   // Handle touch events for mobile pinch zoom
   const handleTouchMove = (event) => {
-    if (isMobile.current) return;
-    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
@@ -209,8 +192,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   };
 
   const handleTouchStart = (event) => {
-    if (isMobile.current) return;
-    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
@@ -220,6 +201,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   const handleTouchEnd = () => {
     lastPinchDistance.current = null;
+    isDragging.current = false;
+    pointerDown.current = null;
   };
 
   // Add event listeners
@@ -230,68 +213,10 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
 
-    // Handle canvas-specific pointer move for raycasting
-    const handleCanvasPointerMove = (event) => {
-      // Calculate pointer position in normalized device coordinates (-1 to +1)
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-      const rect = event.currentTarget.getBoundingClientRect();
-      
-      pointer.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
-    };
-
-    // Handle global pointer events (for when pointer moves outside canvas)
-    const handleGlobalPointerMove = (event) => {
-      if (!pointerDown.current) return;
-      
-      const dx = event.clientX - pointerDown.current.x;
-      const dy = event.clientY - pointerDown.current.y;
-      
-      if (isDragging.current) {
-        // Convert pixel movement to rotation (scale down the movement)
-        const rotationScale = 0.005;
-        const deltaRotationY = dx * rotationScale;
-        const deltaRotationX = dy * rotationScale;
-        
-        // Update the rotation
-        manualRotate(deltaRotationX, deltaRotationY);
-        
-        // Update pointer position for next frame
-        pointerDown.current = { x: event.clientX, y: event.clientY };
-      } else if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-        isDragging.current = true;
-      }
-    };
-
-    const handleGlobalPointerUp = (event) => {
-      if (isDragging.current) {
-        // Prevent the click event from firing after a drag
-        event.preventDefault();
-        event.stopPropagation();
-        
-        // Signal the end of dragging to resume auto-rotation
-        manualRotate(0, 0, true);
-        
-        // Set a flag to prevent the next click
-        const clickBlocker = (e) => {
-          e.stopPropagation();
-          window.removeEventListener('click', clickBlocker, true);
-        };
-        window.addEventListener('click', clickBlocker, true);
-      }
-      isDragging.current = false;
-      pointerDown.current = null;
-    };
-
     // Add canvas-specific event listeners
     canvas.addEventListener("pointerdown", handlePointerDown);
-    canvas.addEventListener("pointermove", handleCanvasPointerMove);
-    canvas.addEventListener("click", handleClick);
-
-    // Add global event listeners
-    window.addEventListener("pointermove", handleGlobalPointerMove);
-    window.addEventListener("pointerup", handleGlobalPointerUp);
+    canvas.addEventListener("pointermove", handlePointerMove);
+    canvas.addEventListener("pointerup", handlePointerUp);
 
     // Add zoom event listeners
     canvas.addEventListener("wheel", handleWheel, { passive: false });
@@ -303,12 +228,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     return () => {
       // Remove canvas-specific event listeners
       canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointermove", handleCanvasPointerMove);
-      canvas.removeEventListener("click", handleClick);
-
-      // Remove global event listeners
-      window.removeEventListener("pointermove", handleGlobalPointerMove);
-      window.removeEventListener("pointerup", handleGlobalPointerUp);
+      canvas.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("pointerup", handlePointerUp);
 
       // Remove zoom event listeners
       canvas.removeEventListener("wheel", handleWheel);
@@ -393,7 +314,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       ref={globeRef} 
       object={gltf.scene} 
       scale={1.5}
-      onClick={handleClick}
+      onClick={handlePointerUp}
       onPointerMove={handlePointerMove}
     />
   );
