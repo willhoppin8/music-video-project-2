@@ -44,22 +44,22 @@ export default function CountryModal({ countryName, onClose, isOpen }) {
         <button 
           onClick={onClose}
           style={{ backgroundColor: `${COLORS.DARK_STATE}B3` }}
-          className="group fixed top-[100px] right-4 z-50 backdrop-blur-sm px-4 py-2 rounded-xl cursor-pointer transition-all min-w-[235px] sm:min-w-[275px] max-w-[33%]"
+          className="group fixed top-[100px] right-4 z-50 backdrop-blur-sm px-4 py-2 rounded-xl cursor-pointer transition-all max-w-1/3 w-auto"
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 overflow-hidden mr-2 flex-1">
-              <span 
-                className="text-[18px] font-bold truncate block"
+          <div className="flex items-center justify-between">
+            <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 overflow-hidden mr-2">
+              <h2 
+                className="text-[16px] sm:text-[22px] font-bold truncate" 
                 style={{ color: COLORS.SELECTED_TEXT }}
               >
                 {formatCountryName(countryName)}
-              </span>
+              </h2>
             </div>
-            <div className="opacity-100 group-hover:opacity-70 transition-all duration-200 flex-shrink-0">
-              <div style={{ color: COLORS.SELECTED_TEXT }}>
-                <IoInformationCircle size={24} />
-              </div>
-            </div>
+            <IoInformationCircle 
+              size={26}
+              className="sm:w-8 sm:h-8 opacity-100 group-hover:opacity-70 transition-all duration-200 flex-shrink-0"
+              style={{ color: COLORS.SELECTED_TEXT }}
+            />
           </div>
         </button>
       )}

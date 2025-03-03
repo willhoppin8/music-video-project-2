@@ -4,7 +4,6 @@ import { COLORS } from "../constants/colors";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Default bloom values (when no country is selected)
