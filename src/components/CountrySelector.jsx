@@ -145,6 +145,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                   color: letter === currentLetter ? COLORS.SELECTED_TEXT : undefined,
                   fontSize: `${letterSize}px`,
                   height: `${letterSize + 8}px`, // Add 8px for margin
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)'
                 }}
                 className={`hover:text-[${COLORS.LIGHT_STATE}] text-[${COLORS.LIGHT_STATE}]/70 cursor-pointer w-6 flex items-center`}
               >
@@ -161,7 +162,7 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
         className={`absolute inset-0 overflow-y-auto scrollbar-hide ${showLetterMenu ? 'ml-12' : 'ml-2'}`}
       >
         <div className="min-h-full flex items-center">
-          <div className={`w-full ${showLetterMenu ? 'pl-3 py-8' : 'pl-1 py-3'}`}>
+          <div className={`w-full ${showLetterMenu ? 'pl-3 py-12' : 'pl-1 py-6'}`}>
             {Object.entries(groupedCountries).map(([letter, letterCountries], index) => (
               <div key={letter} ref={el => letterRefs.current[letter] = el}>
                 {/* Add divider if not the first group */}
@@ -174,13 +175,15 @@ export default function CountrySelector({ onCountrySelect, selectedCountry }) {
                 {letterCountries.map((country) => (
                   <div key={country.name} className="flex items-center mb-[6px]">
                     <span 
-                      style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : { opacity: 0 }}
+                      style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT, textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' } : { opacity: 0 }}
                       className="text-sm w-4 mr-px flex-shrink-0"
                     >
                       ▶
                     </span>
                     <button
-                      style={country.name === selectedCountry ? { color: COLORS.SELECTED_TEXT } : undefined}
+                      style={country.name === selectedCountry ? 
+                        { color: COLORS.SELECTED_TEXT, textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' } : 
+                        { textShadow: '0 1px 2px rgba(0, 0, 0, 0.15)' }}
                       className={`text-left transition-colors cursor-pointer truncate text-lg
                         ${country.completed ? `font-bold text-[${COLORS.LIGHT_STATE}]` : `text-[${COLORS.LIGHT_STATE}]/70`}`}
                       onClick={() => onCountrySelect(country.name)}
