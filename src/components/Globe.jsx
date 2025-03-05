@@ -242,10 +242,10 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Create materials for highlighting
   const highlightMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(COLORS.SELECTED),
+    color: new THREE.Color(COLORS.EARTH_HIGHLIGHT),
     metalness: 0.2,
     roughness: 0.8,
-    emissive: new THREE.Color(COLORS.SELECTED),
+    emissive: new THREE.Color(COLORS.EARTH_HIGHLIGHT),
     emissiveIntensity: 2.0
   });
 
@@ -256,6 +256,24 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     roughness: 0.8,
     emissive: new THREE.Color(COLORS.COMPLETED_DIMMED),
     emissiveIntensity: 1.5
+  });
+
+  // Create ocean material
+  const oceanMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(COLORS.EARTH_OCEAN),
+    metalness: 0.3,
+    roughness: 0.7,
+    emissive: new THREE.Color(COLORS.EARTH_OCEAN),
+    emissiveIntensity: 0.5
+  });
+
+  // Create land material for non-highlighted countries
+  const landMaterial = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(COLORS.EARTH_LAND),
+    metalness: 0.2,
+    roughness: 0.8,
+    emissive: new THREE.Color(COLORS.EARTH_LAND),
+    emissiveIntensity: 0.3
   });
 
   // Keep track of transition materials for completed countries
@@ -271,24 +289,27 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       if (object.isMesh) {
         const country = object.name !== "Ocean" && countries.find(c => c.name === object.name);
         
-        if (object.name === selectedCountry) {
-          // Selected country gets bright orange
+        if (object.name === "Ocean") {
+          // Apply ocean material
+          object.material = oceanMaterial;
+        } else if (object.name === selectedCountry) {
+          // Selected country gets bright green highlight
           object.material = highlightMaterial;
         } else if (country?.completed) {
           // Initialize transition material if it doesn't exist
           if (!transitionMaterials.current[object.name]) {
             transitionMaterials.current[object.name] = new THREE.MeshStandardMaterial({
-              color: new THREE.Color(COLORS.SELECTED),
+              color: new THREE.Color(COLORS.EARTH_HIGHLIGHT),
               metalness: 0.2,
               roughness: 0.8,
-              emissive: new THREE.Color(COLORS.SELECTED),
+              emissive: new THREE.Color(COLORS.EARTH_HIGHLIGHT),
               emissiveIntensity: 2.0
             });
           }
 
           const material = transitionMaterials.current[object.name];
-          const targetColor = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.SELECTED);
-          const targetEmissive = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.SELECTED);
+          const targetColor = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.EARTH_HIGHLIGHT);
+          const targetEmissive = selectedCountry ? new THREE.Color(COLORS.COMPLETED_DIMMED) : new THREE.Color(COLORS.EARTH_HIGHLIGHT);
           const targetIntensity = selectedCountry ? 1.5 : 2.0;
 
           // Interpolate color
@@ -298,10 +319,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
           object.material = material;
         } else {
-          // Non-completed countries get default dark state
-          if (originalMaterials.current[object.name]) {
-            object.material = originalMaterials.current[object.name].clone();
-          }
+          // Non-completed countries get light tan color
+          object.material = landMaterial;
         }
       }
     });
