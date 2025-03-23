@@ -65,7 +65,7 @@ export const countries = [
   { name: "Guatemala", rotationX: 0.2754740425, rotationY: 2.344824547, zoom: 0.9, completed: true },
   { name: "Guinea", rotationX: 0.1735834661, rotationY: 0.9392375962, zoom: 1.0, completed: true },
   { name: "Guinea-Bissau", rotationX: 0.2060134289, rotationY: 1.034947962, zoom: 0.82, completed: true },
-  { name: "Guyana", rotationX: 0.08482998296, rotationY: 1.798526019, zoom: 0.9, completed: true },
+  { name: "Guyana", rotationX: 0.08482998296, rotationY: 1.798526019, zoom: 0.9, completed: false },
   { name: "Haiti", rotationX: 0.3311099031, rotationY: 2.03161474, zoom: 0.85, completed: false },
   { name: "Honduras", rotationX: 0.2652900463, rotationY: 2.275205108, zoom: 0.9, completed: false },
   { name: "Hungary", rotationX: 0.8231409085, rotationY: 0.4296032, zoom: 0.9, completed: false },
