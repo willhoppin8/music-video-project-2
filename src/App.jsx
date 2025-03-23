@@ -36,8 +36,8 @@ function App() {
   };
 
   return (
-    <div className="w-screen h-screen relative">
-      <div className="w-full h-full">
+    <div className="fixed inset-0 overflow-hidden">
+      <div className="absolute inset-0">
         <GlobeScene selectedCountry={selectedCountry} onCountrySelect={handleCountrySelect} />
       </div>
       <SearchBar onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
