@@ -56,7 +56,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
       </div>
 
       {showResults && filteredCountries.length > 0 && (
-        <div className="absolute top-full left-0 right-0 md:right-auto md:w-[300px] max-h-[300px] overflow-y-auto rounded-xl bg-[#140100] border border-[#F8D557]/30 scrollbar-hide" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute top-full left-0 right-0 md:right-auto md:w-[300px] mt-3 max-h-[300px] overflow-y-auto rounded-xl bg-[#140100] border border-[#F8D557]/30 scrollbar-hide" onClick={(e) => e.stopPropagation()}>
           {filteredCountries.map((country) => (
             <button
               key={country.name}
