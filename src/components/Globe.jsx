@@ -50,6 +50,10 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer down for drag detection
   const handlePointerDown = (event) => {
+    // Check if click originated from search bar
+    if (event.target?.closest?.('.search-container')) {
+      return;
+    }
     pointerDown.current = { x: event.clientX, y: event.clientY };
     pointerDownTime.current = Date.now();
     isDragging.current = false;
@@ -63,6 +67,11 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer move for raycasting and drag detection
   const handlePointerMove = (event) => {
+    // Check if pointer is over search bar
+    if (event.target?.closest?.('.search-container')) {
+      return;
+    }
+
     // Check for drag if pointer is down
     if (pointerDown.current) {
       const dragThreshold = 5; // pixels
@@ -94,6 +103,11 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer up to reset drag state and handle clicks
   const handlePointerUp = (event) => {
+    // Check if click originated from search bar
+    if (event.target?.closest?.('.search-container')) {
+      return;
+    }
+
     const wasDragging = isDragging.current;
     const clickDuration = Date.now() - (pointerDownTime.current || 0);
     
