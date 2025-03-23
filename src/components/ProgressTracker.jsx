@@ -7,7 +7,7 @@ export default function ProgressTracker() {
   const percentage = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="fixed top-4 right-4 z-50 text-right">
+    <div className="fixed bottom-4 left-4 z-50">
       <div style={{ color: `${COLORS.LIGHT_STATE}70` }} className="text-4xl font-normal">
         <span style={{ color: COLORS.SELECTED_TEXT }} className="font-bold">{completedCount}</span>
         <span className="mx-0.5">/</span>
