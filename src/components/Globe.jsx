@@ -195,12 +195,12 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
 
-    // Add canvas-specific event listeners
-    canvas.addEventListener("pointerdown", handlePointerDown);
-    canvas.addEventListener("pointermove", handlePointerMove);
-    canvas.addEventListener("pointerup", handlePointerUp);
+    // Add window-level pointer event listeners
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
 
-    // Add zoom event listeners
+    // Add canvas-specific zoom event listeners
     canvas.addEventListener("wheel", handleWheel, { passive: false });
     canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
     canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
@@ -208,12 +208,12 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     canvas.addEventListener("touchcancel", handleTouchEnd);
 
     return () => {
-      // Remove canvas-specific event listeners
-      canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointermove", handlePointerMove);
-      canvas.removeEventListener("pointerup", handlePointerUp);
+      // Remove window-level pointer event listeners
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
 
-      // Remove zoom event listeners
+      // Remove canvas-specific zoom event listeners
       canvas.removeEventListener("wheel", handleWheel);
       canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("touchmove", handleTouchMove);
