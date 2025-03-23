@@ -171,23 +171,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       // Prevent default browser pinch-zoom
       event.preventDefault();
       event.stopPropagation();
-      
-      // Calculate the distance between the two touch points
-      const touch1 = event.touches[0];
-      const touch2 = event.touches[1];
-      const distance = Math.hypot(
-        touch2.clientX - touch1.clientX,
-        touch2.clientY - touch1.clientY
-      );
-
-      if (lastPinchDistance.current !== null) {
-        const delta = distance - lastPinchDistance.current;
-        // Convert pinch delta to zoom delta (increase sensitivity)
-        const zoomDelta = delta * 0.005;
-        manualZoom(zoomDelta);
-      }
-
-      lastPinchDistance.current = distance;
+      return; // Exit early to prevent any zoom handling
     }
   };
 
@@ -225,6 +209,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     canvas.addEventListener("touchend", handleTouchEnd);
     canvas.addEventListener("touchcancel", handleTouchEnd);
 
+    // Add touch-action CSS to prevent pinch zoom
+    canvas.style.touchAction = "pan-x pan-y";
+
     return () => {
       // Remove canvas-specific event listeners
       canvas.removeEventListener("pointerdown", handlePointerDown);
@@ -237,6 +224,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       canvas.removeEventListener("touchmove", handleTouchMove);
       canvas.removeEventListener("touchend", handleTouchEnd);
       canvas.removeEventListener("touchcancel", handleTouchEnd);
+
+      // Remove touch-action CSS
+      canvas.style.touchAction = "";
     };
   }, [camera, onCountrySelect]);
 
