@@ -9,13 +9,18 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
+  // Helper function to format country name for display (replace underscores with spaces)
+  const formatCountryName = (name) => {
+    return name.replace(/_/g, ' ');
+  };
+
   // Filter countries based on search term
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredCountries(countries);
     } else {
       const filtered = countries.filter(country =>
-        country.name.toLowerCase().includes(searchTerm.toLowerCase())
+        formatCountryName(country.name).toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredCountries(filtered);
     }
@@ -34,7 +39,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
   }, []);
 
   return (
-    <div className="fixed top-6 left-6 z-50 search-container">
+    <div className="fixed top-[21px] left-[21px] z-50 search-container">
       <div className="relative">
         <div className="absolute left-3 top-1/2 -translate-y-1/2">
           <FontAwesomeIcon icon={faSearch} className="text-[#F8D557]/50" />
@@ -63,7 +68,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
                 country.name === selectedCountry ? 'text-[#F8D557]' : 'text-[#F8D557]/70'
               }`}
             >
-              {country.name.replace(/_/g, ' ')}
+              {formatCountryName(country.name)}
             </button>
           ))}
         </div>
