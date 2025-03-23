@@ -17,14 +17,16 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
   // Filter countries based on search term
   useEffect(() => {
     if (searchTerm.trim() === "") {
-      setFilteredCountries(countries);
+      // Filter out the selected country from the initial list
+      setFilteredCountries(countries.filter(country => country.name !== selectedCountry));
     } else {
       const filtered = countries.filter(country =>
-        formatCountryName(country.name).toLowerCase().includes(searchTerm.toLowerCase())
+        formatCountryName(country.name).toLowerCase().includes(searchTerm.toLowerCase()) && 
+        country.name !== selectedCountry
       );
       setFilteredCountries(filtered);
     }
-  }, [searchTerm]);
+  }, [searchTerm, selectedCountry]); // Also depend on selectedCountry
 
   // Close results when clicking outside
   useEffect(() => {
