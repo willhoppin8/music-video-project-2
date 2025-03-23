@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
  */
 const Globe = ({ selectedCountry, onCountrySelect }) => {
   const gltf = useLoader(GLTFLoader, "/globe.glb");
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const originalMaterials = useRef({});
   const globeRef = useRef();
   const raycaster = useRef(new THREE.Raycaster());
@@ -86,7 +86,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     }
 
     // Calculate pointer position in normalized device coordinates (-1 to +1)
-    const rect = event.currentTarget.getBoundingClientRect();
+    const canvas = gl.domElement;
+    const rect = canvas.getBoundingClientRect();
     pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   };
@@ -113,7 +114,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     if (!gltf || !onCountrySelect) return;
 
     // Get the canvas element and its bounding rect
-    const canvas = event.currentTarget;
+    const canvas = gl.domElement;
     const rect = canvas.getBoundingClientRect();
 
     // Calculate normalized device coordinates (-1 to +1)

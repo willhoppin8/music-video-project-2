@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { countries } from "../data/countries";
 import { COLORS } from "../constants/colors";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function SearchBar({ onCountrySelect, selectedCountry }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,15 +34,18 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
   }, []);
 
   return (
-    <div className="fixed top-4 left-4 z-50 search-container">
+    <div className="fixed top-6 left-6 z-50 search-container">
       <div className="relative">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2">
+          <FontAwesomeIcon icon={faSearch} className="text-[#F8D557]/50" />
+        </div>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => setShowResults(true)}
           placeholder="Take me to..."
-          className="w-[200px] px-4 py-2 rounded-xl bg-[#140100] border border-[#F8D557]/30 text-[#F8D557] placeholder-[#F8D557]/50 focus:outline-none focus:border-[#F8D557]/70 focus:ring-0"
+          className="w-[200px] pl-10 pr-4 py-2 rounded-xl bg-[#140100] border border-[#F8D557]/30 text-[#F8D557] placeholder-[#F8D557]/50 focus:outline-none focus:border-[#F8D557]/70 focus:ring-0"
         />
       </div>
 
