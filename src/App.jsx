@@ -1,6 +1,6 @@
 import { useState } from "react";
 import GlobeScene from "./components/GlobeScene";
-import CountrySelector from "./components/CountrySelector";
+import SearchBar from "./components/SearchBar";
 import SocialLinks from "./components/SocialLinks";
 import ProgressTracker from "./components/ProgressTracker";
 import CountryModal from "./components/CountryModal";
@@ -40,7 +40,7 @@ function App() {
       <div className="w-full h-full">
         <GlobeScene selectedCountry={selectedCountry} onCountrySelect={handleCountrySelect} />
       </div>
-      <CountrySelector onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
+      <SearchBar onCountrySelect={handleCountrySelect} selectedCountry={selectedCountry} />
       <ProgressTracker />
       <SocialLinks />
       <CountryModal 
