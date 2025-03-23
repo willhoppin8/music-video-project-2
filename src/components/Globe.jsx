@@ -155,14 +155,12 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle wheel events for desktop zoom
   const handleWheel = (event) => {
-    if (!isMobile.current) {
-      event.preventDefault();
-      event.stopPropagation();
-      
-      // Convert wheel delta to zoom delta (normalize it a bit)
-      const zoomDelta = event.deltaY * 0.0005;
-      manualZoom(zoomDelta);
-    }
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Convert wheel delta to zoom delta (normalize it a bit)
+    const zoomDelta = event.deltaY * 0.0005;
+    manualZoom(zoomDelta);
   };
 
   // Handle touch events for mobile pinch zoom
@@ -171,7 +169,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       // Prevent default browser pinch-zoom
       event.preventDefault();
       event.stopPropagation();
-      return; // Exit early to prevent any zoom handling
     }
   };
 
@@ -209,9 +206,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     canvas.addEventListener("touchend", handleTouchEnd);
     canvas.addEventListener("touchcancel", handleTouchEnd);
 
-    // Add touch-action CSS to prevent pinch zoom
-    canvas.style.touchAction = "pan-x pan-y";
-
     return () => {
       // Remove canvas-specific event listeners
       canvas.removeEventListener("pointerdown", handlePointerDown);
@@ -224,9 +218,6 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       canvas.removeEventListener("touchmove", handleTouchMove);
       canvas.removeEventListener("touchend", handleTouchEnd);
       canvas.removeEventListener("touchcancel", handleTouchEnd);
-
-      // Remove touch-action CSS
-      canvas.style.touchAction = "";
     };
   }, [camera, onCountrySelect]);
 

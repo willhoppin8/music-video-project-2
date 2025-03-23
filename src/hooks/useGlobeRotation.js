@@ -70,10 +70,8 @@ export default function useGlobeRotation(selectedCountry, camera) {
 
   // Add manual zoom handler
   const manualZoom = (deltaZoom) => {
-    if (selectedCountry) return; // Don't allow manual zoom when a country is selected
-    
-    const MIN_ZOOM = 0.8; // Decreased from 1.0 to allow zooming out less
-    const MAX_ZOOM = 2.0; // Changed from 3.5 to 2.0 for less extreme zoom in
+    const MIN_ZOOM = 0.8;
+    const MAX_ZOOM = 2.0;
     
     // Update current zoom with constraints
     currentZoom.current = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, currentZoom.current + deltaZoom));
@@ -89,7 +87,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
         
         const newRotation = {
           x: country.rotationX,
-          y: country.rotationY + (isMobile.current ? 0.05 : 0) // Add 0.05 to rotationY on mobile
+          y: country.rotationY + (isMobile.current ? 0.05 : 0) // Keep mobile rotation adjustment
         };
 
         // Reset transition progress
@@ -100,7 +98,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
           if (prevCountry) {
             const prevRotation = {
               x: prevCountry.rotationX,
-              y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0) // Add 0.05 to rotationY on mobile
+              y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0) // Keep mobile rotation adjustment
             };
             
             const distance = calculateDistance(newRotation, prevRotation);
@@ -108,7 +106,6 @@ export default function useGlobeRotation(selectedCountry, camera) {
               MIN_TRANSITION_SPEED,
               MAX_TRANSITION_SPEED / (1 + distance)
             );
-            // Increase max zoom out factor (max 2x at longest distances)
             maxZoomOutFactor.current = 1 + Math.min(distance, Math.PI) / Math.PI * 1.0;
           }
         }
@@ -123,16 +120,16 @@ export default function useGlobeRotation(selectedCountry, camera) {
       if (prevCountry) {
         const deselectedRotation = {
           x: prevCountry.rotationX,
-          y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0)
+          y: prevCountry.rotationY + (isMobile.current ? 0.05 : 0) // Keep mobile rotation adjustment
         };
         targetRotation.current = deselectedRotation;
-        currentRotation.current = deselectedRotation; // Sync current rotation with target
+        currentRotation.current = deselectedRotation;
       }
-      startZoom.current = DEFAULT_ZOOM; // Always start from default zoom when deselecting
+      startZoom.current = DEFAULT_ZOOM;
       targetZoom.current = DEFAULT_ZOOM;
-      currentZoom.current = DEFAULT_ZOOM; // Reset current zoom to default as well
+      currentZoom.current = DEFAULT_ZOOM;
       previousCountry.current = null;
-      transitionSpeed.current = RESET_TRANSITION_SPEED; // Use faster speed when resetting
+      transitionSpeed.current = RESET_TRANSITION_SPEED;
       maxZoomOutFactor.current = 1;
       transitionProgress.current = 0;
     }
