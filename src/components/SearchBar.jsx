@@ -51,12 +51,12 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
           onFocus={() => setShowResults(true)}
           onClick={(e) => e.stopPropagation()}
           placeholder="Take me to..."
-          className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#140100]/60 backdrop-blur-sm border border-[#F8D557]/30 text-[#F8D557] placeholder-[#F8D557]/50 focus:outline-none focus:border-[#F8D557]/70 focus:ring-0"
+          className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#140100]/45 backdrop-blur-sm border border-[#F8D557]/30 text-[#F8D557] placeholder-[#F8D557]/50 focus:outline-none focus:border-[#F8D557]/70 focus:ring-0"
         />
       </div>
 
       {showResults && filteredCountries.length > 0 && (
-        <div className="absolute top-full left-0 right-0 md:right-auto md:w-[300px] mt-3 max-h-[300px] overflow-y-auto rounded-xl bg-[#140100] border border-[#F8D557]/30 scrollbar-hide" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute top-full left-0 right-0 md:right-auto md:w-[300px] mt-3 max-h-[300px] overflow-y-auto rounded-xl bg-[#140100]/60 backdrop-blur-sm border border-[#F8D557]/30 scrollbar-hide" onClick={(e) => e.stopPropagation()}>
           {filteredCountries.map((country) => (
             <button
               key={country.name}
