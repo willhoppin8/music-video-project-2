@@ -52,6 +52,7 @@ export const countries = [
   { name: "Eswatini", rotationX: -0.4629049509, rotationY: 0.2208164429, zoom: 0.82, completed: true },
   { name: "Ethiopia", rotationX: 0.1596103601, rotationY: 0.06332142186, zoom: 1.2, completed: false },
   { name: "Fiji", rotationX: -0.3091571517, rotationY: -2.337820533, zoom: 0.82, completed: false },
+  { name: "Falkland_Islands", rotationX: -0.9040159754, rotationY: 1.808882803, zoom: 0.82, completed: false },
   { name: "Finland", rotationX: 1.080779431, rotationY: 0.3206091335, zoom: 1.2, completed: false },
   { name: "France", rotationX: 0.8133827726, rotationY: 0.7370429477, zoom: 1.2, completed: false },
   { name: "Gabon", rotationX: -0.0140272112, rotationY: 0.5673777458, zoom: 1.0, completed: true },
