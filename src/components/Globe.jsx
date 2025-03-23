@@ -50,8 +50,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer down for drag detection
   const handlePointerDown = (event) => {
-    // Check if click originated from search bar
-    if (event.target?.closest?.('.search-container')) {
+    // Check if click originated from search bar or modal content
+    if (event.target?.closest?.('.search-container') || event.target?.closest?.('.modal-content')) {
       return;
     }
     pointerDown.current = { x: event.clientX, y: event.clientY };
@@ -67,8 +67,8 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle pointer move for raycasting and drag detection
   const handlePointerMove = (event) => {
-    // Check if pointer is over search bar
-    if (event.target?.closest?.('.search-container')) {
+    // Check if pointer is over search bar or modal content
+    if (event.target?.closest?.('.search-container') || event.target?.closest?.('.modal-content')) {
       return;
     }
 
