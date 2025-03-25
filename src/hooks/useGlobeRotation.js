@@ -63,8 +63,15 @@ export default function useGlobeRotation(selectedCountry, camera) {
       isDragging.current = false;
     } else {
       isDragging.current = true;
+      
+      // Check if the globe is "upside down" based on x rotation
+      // We need to invert horizontal dragging when viewing "from below"
+      const cosX = Math.cos(currentRotation.current.x);
+      const isUpsideDown = cosX < 0;
+      
+      // Apply the rotation with inverted horizontal direction when upside down
       currentRotation.current.x += deltaX;
-      currentRotation.current.y += deltaY;
+      currentRotation.current.y += isUpsideDown ? -deltaY : deltaY;
     }
   };
 
