@@ -5,9 +5,9 @@ import { IoClose } from 'react-icons/io5';
 export default function CountryModal({ countryName, onClose }) {
   if (!countryName) return null;
 
-  // Helper function to format country name for display (replace underscores with spaces)
+  // Helper function to format country name for display (replace underscores with spaces and make lowercase)
   const formatCountryName = (name) => {
-    return name.replace(/_/g, ' ');
+    return name.replace(/_/g, ' ').toLowerCase();
   };
 
   return (
