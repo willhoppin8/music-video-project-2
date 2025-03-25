@@ -55,7 +55,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry, onShowAbou
         <button 
           onClick={onShowAbout}
           style={{ color: COLORS.SELECTED_TEXT }} 
-          className="text-xs italic mt-1.5 cursor-pointer underline md:no-underline md:hover:underline"
+          className="text-xs italic mt-1.5 cursor-pointer hover:underline"
         >
           about the open mic project
         </button>
