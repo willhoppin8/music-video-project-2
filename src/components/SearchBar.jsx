@@ -4,7 +4,7 @@ import { COLORS } from "../constants/colors";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-export default function SearchBar({ onCountrySelect, selectedCountry }) {
+export default function SearchBar({ onCountrySelect, selectedCountry, onShowAbout }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -52,9 +52,13 @@ export default function SearchBar({ onCountrySelect, selectedCountry }) {
           <span className="md:block">{totalCount} countries.</span>
           <span className="md:block">{totalCount} music videos.</span>
         </p>
-        <p style={{ color: COLORS.SELECTED_TEXT }} className="text-xs italic mt-1.5">
+        <button 
+          onClick={onShowAbout}
+          style={{ color: COLORS.SELECTED_TEXT }} 
+          className="text-xs italic mt-1.5 cursor-pointer underline md:no-underline md:hover:underline"
+        >
           about the open mic project
-        </p>
+        </button>
       </div>
       
       <div className="relative mt-1 md:mt-4">

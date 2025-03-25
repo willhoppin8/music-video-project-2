@@ -2,14 +2,7 @@ import React from 'react';
 import { COLORS } from '../constants/colors';
 import { IoClose } from 'react-icons/io5';
 
-export default function CountryModal({ countryName, onClose }) {
-  if (!countryName) return null;
-
-  // Helper function to format country name for display (replace underscores with spaces and make lowercase)
-  const formatCountryName = (name) => {
-    return name.replace(/_/g, ' ').toLowerCase();
-  };
-
+export default function AboutModal({ onClose }) {
   return (
     <>
       {/* Invisible overlay that blocks raycasting in the modal area */}
@@ -30,18 +23,23 @@ export default function CountryModal({ countryName, onClose }) {
           <IoClose size={26} className="sm:w-8 sm:h-8" />
         </button>
         <h2 
-          className="text-[18px] sm:text-[22px] font-bold px-4 sm:px-8 py-4 sm:py-6 break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)] whitespace-nowrap overflow-hidden text-ellipsis mt-[5px]" 
+          className="text-[18px] sm:text-[22px] font-bold px-4 sm:px-8 py-4 sm:py-6 break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)] mt-[5px]" 
           style={{ color: COLORS.SELECTED_TEXT }}
-          lang="en"
         >
-          {formatCountryName(countryName)}
+          about the project
         </h2>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="px-4 sm:px-8 overflow-y-auto h-[calc(100%-80px)]">
           <p 
-            className="text-base italic"
+            className="text-base mb-4"
             style={{ color: COLORS.SELECTED_TEXT }}
           >
-            no content yet...
+            the <span className="font-bold">open mic project</span> aims to create music videos in every country around the world.
+          </p>
+          <p 
+            className="text-base"
+            style={{ color: COLORS.SELECTED_TEXT }}
+          >
+            featuring local artists and showcasing diverse musical traditions, this global initiative connects cultures through the universal language of music.
           </p>
         </div>
       </div>
