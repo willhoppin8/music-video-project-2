@@ -5,6 +5,7 @@ import SocialLinks from "./components/SocialLinks";
 import ProgressTracker from "./components/ProgressTracker";
 import CountryModal from "./components/CountryModal";
 import AboutModal from "./components/AboutModal";
+import { COLORS } from "./constants/colors";
 
 /**
  * Main App component that renders the UI and 3D globe.
@@ -49,6 +50,17 @@ function App() {
       />
       <ProgressTracker />
       <SocialLinks />
+      
+      {/* About button at bottom center */}
+      <div className="fixed bottom-4 left-0 right-0 flex justify-center z-[50]">
+        <button
+          onClick={handleShowAbout}
+          style={{ color: COLORS.SELECTED_TEXT }}
+          className="text-sm underline cursor-pointer"
+        >
+          about
+        </button>
+      </div>
       
       {selectedCountry && (
         <CountryModal 

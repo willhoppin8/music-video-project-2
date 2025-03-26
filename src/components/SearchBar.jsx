@@ -52,13 +52,6 @@ export default function SearchBar({ onCountrySelect, selectedCountry, onShowAbou
           <span className="md:block">{totalCount} countries.</span>
           <span className="md:block">{totalCount} music videos.</span>
         </p>
-        <button 
-          onClick={onShowAbout}
-          style={{ color: COLORS.SELECTED_TEXT }} 
-          className="text-xs italic mt-1.5 cursor-pointer hover:underline"
-        >
-          about the open mic project
-        </button>
       </div>
       
       <div className="relative mt-1 md:mt-4">
