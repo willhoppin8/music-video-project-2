@@ -93,7 +93,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
         startZoom.current = camera.position.length() / DEFAULT_CAMERA_DISTANCE;
         
         const newRotation = {
-          x: country.rotationX,
+          x: country.rotationX + (isMobile.current ? -0.08 : 0),
           y: country.rotationY
         };
 
@@ -104,7 +104,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
           const prevCountry = countries.find(c => c.name === previousCountry.current);
           if (prevCountry) {
             const prevRotation = {
-              x: prevCountry.rotationX,
+              x: prevCountry.rotationX + (isMobile.current ? -0.08 : 0),
               y: prevCountry.rotationY
             };
             
@@ -126,7 +126,7 @@ export default function useGlobeRotation(selectedCountry, camera) {
       const prevCountry = countries.find(c => c.name === previousCountry.current);
       if (prevCountry) {
         const deselectedRotation = {
-          x: prevCountry.rotationX,
+          x: prevCountry.rotationX + (isMobile.current ? -0.08 : 0),
           y: prevCountry.rotationY
         };
         targetRotation.current = deselectedRotation;
