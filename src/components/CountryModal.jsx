@@ -73,11 +73,19 @@ export default function CountryModal({ countryName, onClose }) {
                   className="w-full h-full object-cover rounded-lg"
                 />
                 <div className="absolute inset-0 flex justify-center items-center">
-                  <div className="w-16 h-16 rounded-full bg-[#FF7F11]/70 flex justify-center items-center">
-                    <div 
-                      className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-[#FF5500] ml-1"
-                    ></div>
-                  </div>
+                  <div 
+                    className="w-0 h-0 border-t-[15px] border-t-transparent border-b-[15px] border-b-transparent border-l-[25px] border-l-[#FF5500] drop-shadow-[0_0_10px_rgba(255,127,17,0.7)] rounded-sm"
+                    style={{ 
+                      filter: 'url(#rounded-triangle)',
+                      transform: 'scale(1.35)' 
+                    }}
+                  ></div>
+                  <svg width="0" height="0">
+                    <filter id="rounded-triangle">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="rounded-triangle" />
+                    </filter>
+                  </svg>
                 </div>
               </div>
             )}
@@ -88,7 +96,7 @@ export default function CountryModal({ countryName, onClose }) {
               className="text-base italic"
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              coming soon
+              coming soon...
             </p>
           </div>
         )}
