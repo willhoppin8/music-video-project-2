@@ -50,7 +50,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry, onShowAbou
       <div className="mb-3 text-center md:text-left md:pl-[5px]">
         <p style={{ color: COLORS.SELECTED_TEXT }} className="text-[17px] max-[500px]:text-[17px] min-[500px]:text-xl md:text-[28px] font-medium">
           <span className="md:block">{totalCount} countries.</span>
-          <span className="md:block">{totalCount} music videos.</span>
+          <span className="md:inline md:block"><span className="md:hidden mr-[4px]"></span>{totalCount} music videos.</span>
         </p>
       </div>
       

@@ -4,6 +4,7 @@ html, body {
   overflow: hidden;
   height: 100%;
   margin: 0;
+  background-color: #000000;
 }
 
 :root {
@@ -21,10 +22,11 @@ html, body {
 body {
   margin: 0;
   color: white;
+  background-color: #000000;
 }
 
 :root {
-  --dark-state: #0D0208;
+  --dark-state: #000000;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

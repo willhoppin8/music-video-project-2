@@ -38,7 +38,7 @@ function App() {
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <div className="fixed inset-0 overflow-hidden bg-black">
       <div className="absolute inset-0">
         <GlobeScene selectedCountry={selectedCountry} onCountrySelect={handleCountrySelect} />
       </div>

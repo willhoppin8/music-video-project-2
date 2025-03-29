@@ -41,7 +41,7 @@ export default function CountryModal({ countryName, onClose }) {
             className="text-base italic"
             style={{ color: COLORS.SELECTED_TEXT }}
           >
-            no content yet...
+            coming soon
           </p>
         </div>
       </div>
