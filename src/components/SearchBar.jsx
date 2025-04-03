@@ -45,7 +45,7 @@ export default function SearchBar({ onCountrySelect, selectedCountry, onShowAbou
   }, []);
 
   return (
-    <div className="fixed top-[21px] left-[21px] right-[21px] md:right-auto md:w-[300px] z-[110] search-container" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed top-[21px] left-[21px] right-[75px] md:right-auto md:w-[300px] z-[110] search-container" onClick={(e) => e.stopPropagation()}>
       {/* Project stats text */}
       <div className="mb-3 text-center md:text-left md:pl-[5px]">
         <p style={{ color: COLORS.SELECTED_TEXT }} className="text-[17px] max-[500px]:text-[17px] min-[500px]:text-xl md:text-[28px] font-medium">
