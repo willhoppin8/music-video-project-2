@@ -3,6 +3,7 @@ import { COLORS } from '../constants/colors';
 import { IoClose } from 'react-icons/io5';
 import { countries } from '../data/countries';
 import { FaSpotify, FaGlobe } from 'react-icons/fa';
+import { FaTiktok } from 'react-icons/fa6';
 
 export default function CountryModal({ countryName, onClose }) {
   if (!countryName) return null;
@@ -26,14 +27,14 @@ export default function CountryModal({ countryName, onClose }) {
   return (
     <>
       {/* Invisible overlay that blocks raycasting in the modal area */}
-      <div className="fixed inset-0 w-full md:w-1/3 md:min-w-[235px] md:sm:min-w-[275px] md:right-0 md:top-0 md:bottom-0 z-[100] pointer-events-none">
+      <div className="fixed inset-0 w-full md:w-[42%] md:min-w-[235px] md:sm:min-w-[275px] md:right-0 md:top-0 md:bottom-0 z-[100] pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 pointer-events-auto" />
       </div>
       
       {/* Visible modal content */}
       <div 
-        style={{ backgroundColor: `${COLORS.DARK_STATE}B3` }} 
-        className="backdrop-blur-sm h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(33.333333%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-y-auto scrollbar-hide"
+        style={{ backgroundColor: `${COLORS.DARK_STATE}CC` }} 
+        className="backdrop-blur-sm h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(42%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-hidden"
       >
         {/* Fixed header with gradient */}
         <div className="absolute top-0 left-0 right-0 z-10" style={{ backgroundColor: `${COLORS.DARK_STATE}CC` }}>
@@ -70,7 +71,7 @@ export default function CountryModal({ countryName, onClose }) {
                 {isVideoOpen ? (
                   <div className="w-full rounded-lg overflow-hidden">
                     <iframe 
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+                      src={`https://www.youtube.com/embed/${country.youtubeId}?autoplay=1`} 
                       title={`Open Mic Project - ${formatCountryName(countryName)}`}
                       className="w-full aspect-video rounded-lg" 
                       frameBorder="0" 
@@ -85,16 +86,16 @@ export default function CountryModal({ countryName, onClose }) {
                     onClick={handleVideoClick}
                   >
                     <img 
-                      src={`https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`} 
+                      src={`https://img.youtube.com/vi/${country.youtubeId}/maxresdefault.jpg`} 
                       alt={`Open Mic Project - ${formatCountryName(countryName)}`}
                       className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-80"
                     />
                     <div className="absolute inset-0 flex justify-center items-center">
                       <div 
-                        className="w-10 h-10 flex items-center justify-center bg-[#F8D557] rounded-full"
+                        className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-[#F8D557] rounded-full"
                         style={{ boxShadow: '0 0 10px rgba(248,213,87,0.7)' }}
                       >
-                        <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[12px] border-l-[#333] ml-1"></div>
+                        <div className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[15px] border-l-[#333] ml-1"></div>
                       </div>
                     </div>
                   </div>
@@ -144,18 +145,19 @@ export default function CountryModal({ countryName, onClose }) {
                       className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black group"
                       style={{ boxShadow: '0 0 8px 1px rgba(255,127,17,0.3)' }}
                     >
-                      <div className="absolute inset-0 transition-opacity duration-200 group-hover:opacity-70">
-                        <div className="absolute left-0 right-0 top-[calc(50%+50px)] px-5 transform -translate-y-1/2">
-                          <p className="text-[#FF7F11] text-center text-sm font-medium lowercase">{tiktok.title}</p>
-                        </div>
+                      <div className="absolute top-3 right-3 z-20 pointer-events-none">
+                        <FaTiktok className="text-white opacity-70 w-5 h-5 md:w-6 md:h-6" />
                       </div>
-                      <div className="absolute inset-0 flex justify-center items-center">
+                      <div className="absolute inset-0 flex justify-center items-center transition-opacity duration-200 group-hover:opacity-70">
                         <div 
                           className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#F8D557] rounded-full"
                           style={{ boxShadow: '0 0 8px rgba(248,213,87,0.7)' }}
                         >
                           <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-[#333] ml-0.5"></div>
                         </div>
+                      </div>
+                      <div className="absolute left-0 right-0 top-[calc(50%+50px)] px-5 transform -translate-y-1/2">
+                        <p className="text-[#FF7F11] text-center text-sm font-medium lowercase">{tiktok.title}</p>
                       </div>
                     </div>
                   </a>
@@ -165,7 +167,7 @@ export default function CountryModal({ countryName, onClose }) {
           ) : (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <p 
-                className="text-base italic"
+                className="text-base italic lowercase"
                 style={{ color: COLORS.SELECTED_TEXT }}
               >
                 coming soon...
