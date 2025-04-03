@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { COLORS } from '../constants/colors';
 import { IoClose } from 'react-icons/io5';
 import { countries } from '../data/countries';
-import { FaSpotify, FaGlobe } from 'react-icons/fa';
+import { FaSpotify, FaGlobe, FaYoutube } from 'react-icons/fa';
 import { FaTiktok } from 'react-icons/fa6';
 
 export default function CountryModal({ countryName, onClose }) {
@@ -85,6 +85,15 @@ export default function CountryModal({ countryName, onClose }) {
                     style={{ boxShadow: '0 0 10px 2px rgba(255,127,17,0.3)' }}
                     onClick={handleVideoClick}
                   >
+                    <div className="absolute top-4 right-4 z-20 pointer-events-none transition-opacity duration-200 group-hover:opacity-50">
+                      <FaYoutube 
+                        className="w-7 h-7 md:w-8 md:h-8" 
+                        style={{ 
+                          color: COLORS.SELECTED_TEXT,
+                          filter: 'drop-shadow(0 0 3px rgba(248,213,87,0.7))'
+                        }}
+                      />
+                    </div>
                     <img 
                       src={`https://img.youtube.com/vi/${country.youtubeId}/maxresdefault.jpg`} 
                       alt={`Open Mic Project - ${formatCountryName(countryName)}`}
@@ -92,7 +101,7 @@ export default function CountryModal({ countryName, onClose }) {
                     />
                     <div className="absolute inset-0 flex justify-center items-center">
                       <div 
-                        className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-[#F8D557] rounded-full"
+                        className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-[#F8D557] rounded-full transition-opacity duration-200 group-hover:opacity-50"
                         style={{ boxShadow: '0 0 10px rgba(248,213,87,0.7)' }}
                       >
                         <div className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[15px] border-l-[#333] ml-1"></div>
@@ -145,8 +154,14 @@ export default function CountryModal({ countryName, onClose }) {
                       className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black group"
                       style={{ boxShadow: '0 0 8px 1px rgba(255,127,17,0.3)' }}
                     >
-                      <div className="absolute top-4 right-4 z-20 pointer-events-none">
-                        <FaTiktok className="text-white opacity-70 w-5 h-5 md:w-6 md:h-6" />
+                      <div className="absolute top-4 right-4 z-20 pointer-events-none transition-opacity duration-200 group-hover:opacity-50">
+                        <FaTiktok 
+                          className="w-5 h-5 md:w-6 md:h-6" 
+                          style={{ 
+                            color: COLORS.SELECTED_TEXT,
+                            filter: 'drop-shadow(0 0 3px rgba(248,213,87,0.7))'
+                          }}
+                        />
                       </div>
                       <div className="absolute inset-0 flex justify-center items-center transition-opacity duration-200 group-hover:opacity-70">
                         <div 
@@ -156,7 +171,7 @@ export default function CountryModal({ countryName, onClose }) {
                           <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-[#333] ml-0.5"></div>
                         </div>
                       </div>
-                      <div className="absolute left-0 right-0 top-[calc(50%+60px)] px-5 transform -translate-y-1/2">
+                      <div className="absolute left-0 right-0 top-[calc(50%+60px)] px-5 transform -translate-y-1/2 transition-opacity duration-200 group-hover:opacity-50">
                         <p className="text-[#FF7F11] text-center text-sm font-medium lowercase">{tiktok.title}</p>
                       </div>
                     </div>
