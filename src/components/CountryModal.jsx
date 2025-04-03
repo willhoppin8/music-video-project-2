@@ -131,7 +131,7 @@ export default function CountryModal({ countryName, onClose }) {
               </div>
               
               {/* TikTok videos */}
-              <p className="text-base md:text-lg font-semibold mb-2 lowercase" style={{ color: COLORS.SELECTED_TEXT }}>behind the scenes</p>
+              <p className="text-base md:text-lg font-semibold mb-4 lowercase" style={{ color: COLORS.SELECTED_TEXT }}>behind the scenes</p>
               <div className="grid grid-cols-1 gap-4 mb-[20px]" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
                 {country.tiktoks.map((tiktok, index) => (
                   <a 
@@ -145,7 +145,7 @@ export default function CountryModal({ countryName, onClose }) {
                       className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black group"
                       style={{ boxShadow: '0 0 8px 1px rgba(255,127,17,0.3)' }}
                     >
-                      <div className="absolute top-3 right-3 z-20 pointer-events-none">
+                      <div className="absolute top-4 right-4 z-20 pointer-events-none">
                         <FaTiktok className="text-white opacity-70 w-5 h-5 md:w-6 md:h-6" />
                       </div>
                       <div className="absolute inset-0 flex justify-center items-center transition-opacity duration-200 group-hover:opacity-70">
@@ -156,7 +156,7 @@ export default function CountryModal({ countryName, onClose }) {
                           <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-[#333] ml-0.5"></div>
                         </div>
                       </div>
-                      <div className="absolute left-0 right-0 top-[calc(50%+50px)] px-5 transform -translate-y-1/2">
+                      <div className="absolute left-0 right-0 top-[calc(50%+60px)] px-5 transform -translate-y-1/2">
                         <p className="text-[#FF7F11] text-center text-sm font-medium lowercase">{tiktok.title}</p>
                       </div>
                     </div>

@@ -1,4 +1,5 @@
 import { FaTiktok, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { COLORS } from '../constants/colors';
 
 const SocialLinks = () => {
   return (
@@ -7,7 +8,8 @@ const SocialLinks = () => {
         href="https://www.tiktok.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-white hover:text-white/70 transition-opacity cursor-pointer"
+        className="hover:opacity-70 transition-opacity cursor-pointer"
+        style={{ color: COLORS.SELECTED_TEXT }}
       >
         <FaTiktok size={24} />
       </a>
@@ -15,7 +17,8 @@ const SocialLinks = () => {
         href="https://www.instagram.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-white hover:text-white/70 transition-opacity cursor-pointer"
+        className="hover:opacity-70 transition-opacity cursor-pointer"
+        style={{ color: COLORS.SELECTED_TEXT }}
       >
         <FaInstagram size={24} />
       </a>
@@ -23,7 +26,8 @@ const SocialLinks = () => {
         href="https://www.youtube.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-white hover:text-white/70 transition-opacity cursor-pointer"
+        className="hover:opacity-70 transition-opacity cursor-pointer"
+        style={{ color: COLORS.SELECTED_TEXT }}
       >
         <FaYoutube size={24} />
       </a>
