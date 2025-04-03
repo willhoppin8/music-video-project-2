@@ -34,14 +34,14 @@ export default function CountryModal({ countryName, onClose }) {
   return (
     <>
       {/* Invisible overlay that blocks raycasting in the modal area */}
-      <div className="fixed inset-0 w-full md:w-1/3 md:min-w-[235px] md:sm:min-w-[275px] md:right-0 md:top-0 md:bottom-0 z-[100] pointer-events-none">
+      <div className="fixed inset-0 w-full md:w-[42%] md:min-w-[235px] md:sm:min-w-[275px] md:right-0 md:top-0 md:bottom-0 z-[100] pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 pointer-events-auto" />
       </div>
       
       {/* Visible modal content */}
       <div 
         style={{ backgroundColor: `${COLORS.DARK_STATE}B3` }} 
-        className="backdrop-blur-sm h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(33.333333%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-y-auto scrollbar-hide"
+        className="backdrop-blur-sm h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(42%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-y-auto scrollbar-hide"
       >
         <button 
           onClick={onClose}
@@ -74,21 +74,21 @@ export default function CountryModal({ countryName, onClose }) {
                 </div>
               ) : (
                 <div 
-                  className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer"
+                  className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer group"
                   style={{ boxShadow: '0 0 10px 2px rgba(255,127,17,0.3)' }}
                   onClick={handleVideoClick}
                 >
                   <img 
                     src={`https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`} 
                     alt={`Open Mic Project - ${formatCountryName(countryName)}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-85"
                   />
                   <div className="absolute inset-0 flex justify-center items-center">
                     <div 
-                      className="w-10 h-10 flex items-center justify-center bg-[#F8D557] rounded-full"
+                      className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-[#F8D557] rounded-full"
                       style={{ boxShadow: '0 0 10px rgba(248,213,87,0.7)' }}
                     >
-                      <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[12px] border-l-[#333] ml-1"></div>
+                      <div className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[15px] border-l-[#333] ml-1"></div>
                     </div>
                   </div>
                 </div>
@@ -98,9 +98,9 @@ export default function CountryModal({ countryName, onClose }) {
             {/* Artist info */}
             <div className="mb-4" style={{ color: COLORS.SELECTED_TEXT }}>
               <div className="flex justify-between items-center mb-1">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-base font-bold">{artistInfo.name}</p>
-                  <p className="text-sm italic">{artistInfo.date}</p>
+                <div className="flex items-baseline gap-4">
+                  <p className="text-base md:text-lg font-bold">{artistInfo.name}</p>
+                  <p className="text-sm md:text-base italic">{artistInfo.date}</p>
                 </div>
                 <div className="flex gap-3">
                   <a 
@@ -109,7 +109,7 @@ export default function CountryModal({ countryName, onClose }) {
                     rel="noopener noreferrer"
                     className="text-[#F8D557] hover:opacity-70 transition-opacity"
                   >
-                    <FaSpotify size={20} />
+                    <FaSpotify size={20} className="md:w-5 md:h-5" />
                   </a>
                   <a 
                     href={artistInfo.websiteUrl} 
@@ -117,38 +117,38 @@ export default function CountryModal({ countryName, onClose }) {
                     rel="noopener noreferrer"
                     className="text-[#F8D557] hover:opacity-70 transition-opacity"
                   >
-                    <FaGlobe size={20} />
+                    <FaGlobe size={20} className="md:w-5 md:h-5" />
                   </a>
                 </div>
               </div>
             </div>
             
             {/* TikTok videos */}
-            <p className="text-sm font-semibold mb-2" style={{ color: COLORS.SELECTED_TEXT }}>Behind the scenes</p>
-            <div className="grid grid-cols-3 gap-2 mb-[20px]">
+            <p className="text-sm md:text-base font-semibold mb-2" style={{ color: COLORS.SELECTED_TEXT }}>Behind the scenes</p>
+            <div className="grid grid-cols-1 gap-2 mb-[20px]" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
               {[1, 2, 3].map((index) => (
                 <a 
                   key={index}
                   href="https://www.tiktok.com/@rickastleyofficial/video/7477170509688442134?is_from_webapp=1&sender_device=pc" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block"
+                  className="block w-full"
                 >
                   <div 
-                    className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black"
+                    className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black group"
                     style={{ boxShadow: '0 0 8px 1px rgba(255,127,17,0.3)' }}
                   >
                     <img 
                       src={`https://picsum.photos/150/300?random=${index}`} 
                       alt={`TikTok ${index}`}
-                      className="w-full h-full object-cover opacity-80"
+                      className="w-full h-full object-cover opacity-80 transition-opacity duration-200 group-hover:opacity-70"
                     />
                     <div className="absolute inset-0 flex justify-center items-center">
                       <div 
-                        className="w-6 h-6 flex items-center justify-center bg-[#F8D557] rounded-full"
+                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-[#F8D557] rounded-full"
                         style={{ boxShadow: '0 0 8px rgba(248,213,87,0.7)' }}
                       >
-                        <div className="w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[6px] border-l-[#333] ml-0.5"></div>
+                        <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-[#333] ml-0.5"></div>
                       </div>
                     </div>
                   </div>
