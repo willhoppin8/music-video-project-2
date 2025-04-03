@@ -77,6 +77,9 @@ export default function useGlobeRotation(selectedCountry, camera) {
 
   // Add manual zoom handler
   const manualZoom = (deltaZoom) => {
+    // Don't allow zooming when a country is selected
+    if (selectedCountry) return;
+    
     const MIN_ZOOM = 0.8;
     const MAX_ZOOM = 2.0;
     

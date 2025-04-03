@@ -170,6 +170,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle wheel events for desktop zoom
   const handleWheel = (event) => {
+    // Don't allow zooming when a country is selected
+    if (selectedCountry) return;
+    
     event.preventDefault();
     event.stopPropagation();
     
@@ -180,6 +183,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
 
   // Handle touch events for mobile pinch zoom
   const handleTouchMove = (event) => {
+    // Don't allow pinch zooming when a country is selected
+    if (selectedCountry) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
@@ -188,6 +194,9 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   };
 
   const handleTouchStart = (event) => {
+    // Don't allow pinch zooming when a country is selected
+    if (selectedCountry) return;
+    
     if (event.touches.length === 2) {
       // Prevent default browser pinch-zoom
       event.preventDefault();
