@@ -35,13 +35,13 @@ export default function CountryModal({ countryName, onClose }) {
     <>
       {/* Invisible overlay that blocks raycasting in the modal area */}
       <div className="fixed inset-0 w-full md:w-1/3 md:min-w-[235px] md:sm:min-w-[275px] md:right-0 md:top-0 md:bottom-0 z-[100] pointer-events-none">
-        <div className="absolute bottom-0 left-0 right-0 h-[50vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 pointer-events-auto" />
+        <div className="absolute bottom-0 left-0 right-0 h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 pointer-events-auto" />
       </div>
       
       {/* Visible modal content */}
       <div 
         style={{ backgroundColor: `${COLORS.DARK_STATE}B3` }} 
-        className="backdrop-blur-sm h-[50vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(33.333333%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-y-auto scrollbar-hide"
+        className="backdrop-blur-sm h-[45vh] md:h-[calc(100%-200px)] md:my-[100px] md:mr-4 rounded-t-2xl md:rounded-2xl fixed inset-x-0 bottom-0 md:inset-x-auto md:right-4 md:inset-y-0 md:my-auto md:w-[calc(33.333333%-1rem)] md:min-w-[235px] md:sm:min-w-[275px] pointer-events-auto modal-content z-[101] overflow-y-auto scrollbar-hide"
       >
         <button 
           onClick={onClose}
@@ -74,28 +74,22 @@ export default function CountryModal({ countryName, onClose }) {
                 </div>
               ) : (
                 <div 
-                  className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer drop-shadow-[0_0_8px_rgba(255,127,17,0.5)]"
+                  className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer"
+                  style={{ boxShadow: '0 0 10px 2px rgba(255,127,17,0.3)' }}
                   onClick={handleVideoClick}
                 >
                   <img 
                     src={`https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`} 
                     alt={`Open Mic Project - ${formatCountryName(countryName)}`}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 flex justify-center items-center">
                     <div 
-                      className="w-0 h-0 border-t-[15px] border-t-transparent border-b-[15px] border-b-transparent border-l-[25px] border-l-[#F8D557] drop-shadow-[0_0_10px_rgba(248,213,87,0.7)] rounded-sm"
-                      style={{ 
-                        filter: 'url(#rounded-triangle)',
-                        transform: 'scale(1.35)' 
-                      }}
-                    ></div>
-                    <svg width="0" height="0">
-                      <filter id="rounded-triangle">
-                        <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
-                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="rounded-triangle" />
-                      </filter>
-                    </svg>
+                      className="w-10 h-10 flex items-center justify-center bg-[#F8D557] rounded-full"
+                      style={{ boxShadow: '0 0 10px rgba(248,213,87,0.7)' }}
+                    >
+                      <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[12px] border-l-[#333] ml-1"></div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -140,7 +134,10 @@ export default function CountryModal({ countryName, onClose }) {
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <div className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black drop-shadow-[0_0_8px_rgba(255,127,17,0.5)]">
+                  <div 
+                    className="relative aspect-[9/16] rounded-lg overflow-hidden bg-black"
+                    style={{ boxShadow: '0 0 8px 1px rgba(255,127,17,0.3)' }}
+                  >
                     <img 
                       src={`https://picsum.photos/150/300?random=${index}`} 
                       alt={`TikTok ${index}`}
@@ -148,22 +145,15 @@ export default function CountryModal({ countryName, onClose }) {
                     />
                     <div className="absolute inset-0 flex justify-center items-center">
                       <div 
-                        className="w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-[#F8D557] drop-shadow-[0_0_10px_rgba(248,213,87,0.7)] rounded-sm"
-                        style={{ 
-                          filter: 'url(#rounded-triangle-small)',
-                          transform: 'scale(1.35)' 
-                        }}
-                      ></div>
+                        className="w-6 h-6 flex items-center justify-center bg-[#F8D557] rounded-full"
+                        style={{ boxShadow: '0 0 8px rgba(248,213,87,0.7)' }}
+                      >
+                        <div className="w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[6px] border-l-[#333] ml-0.5"></div>
+                      </div>
                     </div>
                   </div>
                 </a>
               ))}
-              <svg width="0" height="0">
-                <filter id="rounded-triangle-small">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
-                  <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="rounded-triangle-small" />
-                </filter>
-              </svg>
             </div>
           </div>
         ) : (
