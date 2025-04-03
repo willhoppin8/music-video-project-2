@@ -61,7 +61,33 @@ export const countries = [
   { name: "Germany", rotationX: 0.8930099291, rotationY: 0.5875869132, zoom: 1.1, completed: false },
   { name: "Ghana", rotationX: 0.138692589, rotationY: 0.7878582089, zoom: 1.0, completed: false },
   { name: "Greece", rotationX: 0.6819734426, rotationY: 0.3890941081, zoom: 1.0, completed: false },
-  { name: "Greenland", rotationX: 1.251521501, rotationY: 1.513585311, zoom: 1.5, completed: true },
+  { name: "Greenland", 
+    rotationX: 1.251521501, 
+    rotationY: 1.513585311, 
+    zoom: 1.5, 
+    completed: true,
+    youtubeId: "dQw4w9WgXcQ",
+    artist: {
+      name: "Rick Astley",
+      date: "April 15, 2023",
+      spotifyUrl: "https://open.spotify.com/artist/0gxyHStUsqpMadRV0Di1Qt",
+      websiteUrl: "https://www.rickastley.co.uk/"
+    },
+    tiktoks: [
+      {
+        url: "https://www.tiktok.com/@rickastleyofficial/video/7477170509688442134",
+        title: "Behind the Scenes"
+      },
+      {
+        url: "https://www.tiktok.com/@rickastleyofficial/video/7477170509688442134",
+        title: "Studio Session"
+      },
+      {
+        url: "https://www.tiktok.com/@rickastleyofficial/video/7477170509688442134",
+        title: "Recording Day"
+      }
+    ]
+  },
   { name: "Guatemala", rotationX: 0.2754740425, rotationY: 2.344824547, zoom: 0.9, completed: false },
   { name: "Guinea", rotationX: 0.1735834661, rotationY: 0.9392375962, zoom: 1.0, completed: false },
   { name: "Guinea-Bissau", rotationX: 0.2060134289, rotationY: 1.034947962, zoom: 0.82, completed: false },
