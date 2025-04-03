@@ -3,7 +3,7 @@ import { COLORS } from '../constants/colors';
 
 const SocialLinks = () => {
   return (
-    <div className="fixed bottom-4 right-4 flex gap-4 z-50">
+    <div className="fixed bottom-4 right-4 flex gap-4 z-[200]">
       <a
         href="https://www.tiktok.com"
         target="_blank"

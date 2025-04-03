@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import GlobeScene from "./components/GlobeScene";
 import SearchBar from "./components/SearchBar";
 import SocialLinks from "./components/SocialLinks";
 import ProgressTracker from "./components/ProgressTracker";
 import CountryModal from "./components/CountryModal";
 import AboutModal from "./components/AboutModal";
-import ThemeToggle from "./components/ThemeToggle";
 import { COLORS } from "./constants/colors";
 
 /**
@@ -14,7 +13,6 @@ import { COLORS } from "./constants/colors";
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [showAboutModal, setShowAboutModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
 
   const handleCountrySelect = (country) => {
     // Close About modal if open
@@ -39,10 +37,6 @@ function App() {
     setShowAboutModal(true);
   };
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
-
   return (
     <div className="fixed inset-0 overflow-hidden bg-black">
       <div className="absolute inset-0">
@@ -54,7 +48,6 @@ function App() {
         onShowAbout={handleShowAbout}
         showAboutModal={showAboutModal}
       />
-      <ThemeToggle darkMode={darkMode} toggleTheme={toggleTheme} />
       <ProgressTracker />
       <SocialLinks />
       
@@ -63,7 +56,7 @@ function App() {
         <button
           onClick={handleShowAbout}
           style={{ color: COLORS.SELECTED_TEXT }}
-          className="text-sm underline cursor-pointer"
+          className="text-sm underline cursor-pointer transition-opacity duration-200 hover:opacity-70"
         >
           about
         </button>
