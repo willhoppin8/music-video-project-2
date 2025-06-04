@@ -22,6 +22,10 @@ export default function useGlobeRotation(selectedCountry, camera) {
   const transitionSpeed = useRef(MIN_TRANSITION_SPEED);
   const isMobile = useRef(window.innerWidth <= MOBILE_SCREEN_THRESHOLD);
   const isDragging = useRef(false);
+  
+  // Add velocity tracking for smoother dragging
+  const rotationVelocity = useRef({ x: 0, y: 0 });
+  const velocityDamping = 0.85; // Damping factor for smooth deceleration
 
   // Update isMobile on window resize
   useEffect(() => {
@@ -61,8 +65,15 @@ export default function useGlobeRotation(selectedCountry, camera) {
     
     if (isEndingDrag) {
       isDragging.current = false;
+      // Let velocity naturally decay when drag ends
+      return;
     } else {
       isDragging.current = true;
+      
+      // Update velocity with new input, applying some smoothing
+      const velocitySmoothing = 0.6;
+      rotationVelocity.current.x = rotationVelocity.current.x * velocitySmoothing + deltaX * (1 - velocitySmoothing);
+      rotationVelocity.current.y = rotationVelocity.current.y * velocitySmoothing + deltaY * (1 - velocitySmoothing);
       
       // Check if the globe is "upside down" based on x rotation
       // We need to invert horizontal dragging when viewing "from below"
@@ -70,8 +81,8 @@ export default function useGlobeRotation(selectedCountry, camera) {
       const isUpsideDown = cosX < 0;
       
       // Apply the rotation with inverted horizontal direction when upside down
-      currentRotation.current.x += deltaX;
-      currentRotation.current.y += isUpsideDown ? -deltaY : deltaY;
+      currentRotation.current.x += rotationVelocity.current.x;
+      currentRotation.current.y += isUpsideDown ? -rotationVelocity.current.y : rotationVelocity.current.y;
     }
   };
 
@@ -166,6 +177,16 @@ export default function useGlobeRotation(selectedCountry, camera) {
       // Add auto-rotation to Y axis only when not dragging
       if (!isDragging.current) {
         currentRotation.current.y += (Math.PI * 2 * delta) / (60 * 3);
+        
+        // Apply velocity damping when not actively dragging for natural momentum
+        rotationVelocity.current.x *= velocityDamping;
+        rotationVelocity.current.y *= velocityDamping;
+        
+        // Apply remaining velocity for momentum effect
+        const cosX = Math.cos(currentRotation.current.x);
+        const isUpsideDown = cosX < 0;
+        currentRotation.current.x += rotationVelocity.current.x * delta * 60; // Scale by delta time
+        currentRotation.current.y += isUpsideDown ? -rotationVelocity.current.y * delta * 60 : rotationVelocity.current.y * delta * 60;
       }
       
       // Update camera distance based on current zoom

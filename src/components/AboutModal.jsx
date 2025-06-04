@@ -29,14 +29,14 @@ export default function AboutModal({ onClose }) {
               className="text-[18px] sm:text-[20px] font-bold px-4 sm:px-8 pb-1 mt-[10px] break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)] lowercase" 
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              about the open mic project
+              about the omp
             </h2>
           </div>
           <div 
-            className="h-[45px] w-full absolute left-0 right-0" 
+            className="h-[30px] w-full absolute left-0 right-0" 
             style={{ 
               background: `linear-gradient(to bottom, ${COLORS.DARK_STATE}CC 0%, ${COLORS.DARK_STATE}00 100%)`,
-              bottom: '-45px'
+              bottom: '-30px'
             }}
           />
         </div>

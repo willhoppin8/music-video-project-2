@@ -18,6 +18,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const raycaster = useRef(new THREE.Raycaster());
   const pointer = useRef(new THREE.Vector2());
   const pointerDown = useRef(null);
+  const lastPointerPosition = useRef(null);
   const isDragging = useRef(false);
   const isMobile = useRef(false);
   const lastPinchDistance = useRef(null);
@@ -55,6 +56,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       return;
     }
     pointerDown.current = { x: event.clientX, y: event.clientY };
+    lastPointerPosition.current = { x: event.clientX, y: event.clientY };
     pointerDownTime.current = Date.now();
     isDragging.current = false;
   };
@@ -63,6 +65,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
   const handlePointerLeave = () => {
     isDragging.current = false;
     pointerDown.current = null;
+    lastPointerPosition.current = null;
   };
 
   // Handle pointer move for raycasting and drag detection
@@ -73,7 +76,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     }
 
     // Check for drag if pointer is down
-    if (pointerDown.current) {
+    if (pointerDown.current && lastPointerPosition.current) {
       const dragThreshold = 5; // pixels
       const dx = event.clientX - pointerDown.current.x;
       const dy = event.clientY - pointerDown.current.y;
@@ -81,16 +84,21 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
       if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
         isDragging.current = true;
         
-        // Convert pixel movement to rotation (scale down the movement)
-        const rotationScale = 0.005;
-        const deltaRotationY = dx * rotationScale;
-        const deltaRotationX = dy * rotationScale;
+        // Calculate delta from last position for smooth movement
+        const deltaDx = event.clientX - lastPointerPosition.current.x;
+        const deltaDy = event.clientY - lastPointerPosition.current.y;
+        
+        // Convert pixel movement to rotation with improved scaling
+        // Further reduced sensitivity for very controlled dragging
+        const rotationScale = 0.003;
+        const deltaRotationY = deltaDx * rotationScale;
+        const deltaRotationX = deltaDy * rotationScale;
         
         // Update the rotation
         manualRotate(deltaRotationX, deltaRotationY);
         
-        // Update pointer position for next frame
-        pointerDown.current = { x: event.clientX, y: event.clientY };
+        // Update last pointer position for next frame (not the original down position)
+        lastPointerPosition.current = { x: event.clientX, y: event.clientY };
       }
     }
 
@@ -114,6 +122,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     // Reset states
     isDragging.current = false;
     pointerDown.current = null;
+    lastPointerPosition.current = null;
     pointerDownTime.current = null;
 
     // If we were dragging or this was a long press, don't trigger selection
@@ -208,6 +217,7 @@ const Globe = ({ selectedCountry, onCountrySelect }) => {
     lastPinchDistance.current = null;
     isDragging.current = false;
     pointerDown.current = null;
+    lastPointerPosition.current = null;
   };
 
   // Add event listeners
