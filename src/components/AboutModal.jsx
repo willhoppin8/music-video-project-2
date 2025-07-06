@@ -67,7 +67,7 @@ export default function AboutModal({ onClose }) {
               className="text-xs sm:text-sm text-center mt-6 mb-3"
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              by <a href="https://www.instagram.com/willhoppin/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80 transition-opacity">will</a> and <a href="https://www.instagram.com/larsdelin/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80 transition-opacity">lars</a>
+              by <a href="https://www.osmo.vc/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80 transition-opacity">osmo</a>
             </p>
           </div>
         </div>
