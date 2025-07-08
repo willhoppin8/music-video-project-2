@@ -48,7 +48,7 @@ export default function AboutModal({ onClose }) {
               className="text-sm sm:text-base mb-4 mt-10"
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              the <span className="font-bold">bops.world</span> is creating a global collection of original music videos, producing one video in every country and select territories around the world.
+              <span className="font-bold">bops.world</span> is creating a global collection of original music videos, producing one video in every country and select territories around the world.
             </p>
             <p 
               className="text-sm sm:text-base mb-4"
