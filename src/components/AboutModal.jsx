@@ -29,7 +29,7 @@ export default function AboutModal({ onClose }) {
               className="text-[18px] sm:text-[20px] font-bold px-4 sm:px-8 pb-1 mt-[10px] break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)] lowercase" 
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              about the bops.world
+              about bops.world
             </h2>
           </div>
           <div 
