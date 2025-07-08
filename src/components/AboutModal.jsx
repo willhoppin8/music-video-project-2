@@ -29,7 +29,7 @@ export default function AboutModal({ onClose }) {
               className="text-[18px] sm:text-[20px] font-bold px-4 sm:px-8 pb-1 mt-[10px] break-words hyphens-auto pr-12 sm:pr-16 max-w-[calc(100%-24px)] sm:max-w-[calc(100%-40px)] lowercase" 
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              about the o.m.p.
+              about the bops.world
             </h2>
           </div>
           <div 
@@ -48,7 +48,7 @@ export default function AboutModal({ onClose }) {
               className="text-sm sm:text-base mb-4 mt-10"
               style={{ color: COLORS.SELECTED_TEXT }}
             >
-              the <span className="font-bold">open mic project</span> is creating a global collection of original music videos, producing one video in every country and select territories around the world.
+              the <span className="font-bold">bops.world</span> is creating a global collection of original music videos, producing one video in every country and select territories around the world.
             </p>
             <p 
               className="text-sm sm:text-base mb-4"

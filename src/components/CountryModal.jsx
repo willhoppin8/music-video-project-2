@@ -72,7 +72,7 @@ export default function CountryModal({ countryName, onClose }) {
                   <div className="w-full rounded-lg overflow-hidden">
                     <iframe 
                       src={`https://www.youtube.com/embed/${country.youtubeId}?autoplay=1`} 
-                      title={`Open Mic Project - ${formatCountryName(countryName)}`}
+                      title={`bops.world - ${formatCountryName(countryName)}`}
                       className="w-full aspect-video rounded-lg" 
                       frameBorder="0" 
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -96,7 +96,7 @@ export default function CountryModal({ countryName, onClose }) {
                     </div>
                     <img 
                       src={`https://img.youtube.com/vi/${country.youtubeId}/maxresdefault.jpg`} 
-                      alt={`Open Mic Project - ${formatCountryName(countryName)}`}
+                      alt={`bops.world - ${formatCountryName(countryName)}`}
                       className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-80"
                     />
                     <div className="absolute inset-0 flex justify-center items-center">
